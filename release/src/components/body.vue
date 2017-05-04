@@ -1,19 +1,16 @@
 <template>
-  <div class="">
-    <div class="body_container shadow-3">
-      <h6>Como você está se sentindo hoje?</h6>
-    </div>
-    <div class="cont column">
-      <div class="">
-        <mBody></mBody>
+  <div class="t">
+    <div class="card c">
+      <div class="body_container">
+        <h6>Como você está se sentindo hoje?</h6>
       </div>
       <div class="">
         <mButton></mButton>
       </div>
+    </div>
       <div class="">
         <router-view></router-view>
       </div>
-    </div>
   </div>
 </template>
 <script>
@@ -28,11 +25,15 @@ export default {
 }
 </script>
 <style lang="styl" scoped>
+  .t
+    padding 0 4% 0 4%
+  .c
+    border-radius 5px
+    margin-top 2%
   .body_container
     width 100%
-    margin-top 2%
-    padding 4% 1% 4% 1%
+    padding 2% 1% 2% 1%
     text-align center
-    background-color  #7ed4af
+    background-color #099c8e
     color #ffffff
 </style>

@@ -1,12 +1,14 @@
 <template>
   <div class="bem">
-    <div class="bemPainel">
-      <h4>Estou Bem.</h4>
+    <div class="card c">
+      <div class="bemPainel">
+        <h6>Estou Bem.</h6>
+      </div>
+      <h6>{{parabens}}</h6>
+      <h6>{{aceita}}</h6>
+      <p>{{tituloDica}}</p>
+      <p>{{dica}}</p>
     </div>
-    <h6>{{parabens}}</h6>
-    <h6>{{aceita}}</h6>
-    <p>{{tituloDica}}</p>
-    <p>{{dica}}</p>
   </div>
 </template>
 
@@ -25,6 +27,8 @@
 </script>
 
 <style lang="styl" scoped>
+  .c
+    border-radius 5px
   .bem
     color #808B96
     text-align center

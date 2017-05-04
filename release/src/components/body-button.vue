@@ -8,5 +8,6 @@
 
 <style lang="styl" scoped>
   .button_container img
-    margin 20% 0 20% 0
+    margin 10% 0 10% 15%
+    width 70%
 </style>

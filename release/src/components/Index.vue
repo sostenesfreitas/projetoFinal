@@ -16,6 +16,7 @@
       <q-tabs slot="footer" class="c">
         <q-tab icon="feedback" route="/" exact replace>Feedback</q-tab>
         <q-tab icon="local_pharmacy" route="/medicamento" replace>Medicamentos</q-tab>
+        <q-tab icon="assignment_turned_in" route="/metas" replace>Metas</q-tab>
       </q-tabs>
     <router-view></router-view>
 </q-layout>

@@ -1,12 +1,14 @@
 <template>
   <div class="soso">
-    <div class="sosoPainel">
-      <h4>Mais ou menos.</h4>
+    <div class="card c text-center">
+      <div class="sosoPainel text-center">
+        <h6>Mais ou menos.</h6>
+      </div>
+    <h6>{{pergunta}}</h6>
+    <router-link to='/sintoma'><button type="button" name="button">Sim</button></router-link>
+    <button type="button" name="button">Não</button>
     </div>
-  <h5>{{pergunta}}</h5>
-<router-link to='/sintoma'><button type="button" name="button">Sim</button></router-link>
-<button type="button" name="button">Não</button>
-</div>
+  </div>
 </template>
 <script>
   export default {
@@ -19,6 +21,8 @@
   }
 </script>
 <style lang="styl" scoped>
+  .c
+    border-radius 5px
   .soso
     text-align center
     color #808B96
@@ -27,10 +31,5 @@
     color #f5f6f1
     padding 2%
     margin-bottom 5%
-  .soso button
-    padding 5%
-    width 48%
-    margin-top 10%
-    font-size 40px
-    border-radius 5px
+
 </style>

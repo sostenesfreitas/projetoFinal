@@ -10,7 +10,7 @@ import Vue from 'vue'
 import Quasar from 'quasar'
 import router from './router'
 import VueSocketio from 'vue-socket.io'
-Vue.use(VueSocketio, 'http://192.168.0.106:8081')
+Vue.use(VueSocketio, 'http://192.168.98.7:8082')
 import VueTimeago from 'vue-timeago'
 
 Vue.use(VueTimeago, {

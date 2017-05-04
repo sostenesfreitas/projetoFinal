@@ -23,7 +23,8 @@ export default new VueRouter({
               {path: '', component: load('dicas')}
           ]},
       {path: '/medico', component: load('medico')},
-      {path: '/medicamento', component: load('medicamentos')}
+      {path: '/medicamento', component: load('medicamentos')},
+      {path: 'metas', component: load('metas')}
       ]
     },
     {path: '/chat', component: load('chat')}

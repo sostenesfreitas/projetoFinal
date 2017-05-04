@@ -1,17 +1,19 @@
 <template>
   <div class="mal">
-    <div class="malPainel">
-      <h4>Estou mal.</h4>
+    <div class="card c text-center">
+      <div class="malPainel">
+        <h6>Estou mal.</h6>
+      </div>
+      <h6 id='mal'>{{pergunta}}</h6>
+      <div  class="secondary flex wrap">
+        <button type="button" name="button">Tenho dúvidas sobre o que estou sentindo</button>
+        <button type="button" name="button">Não estou me sentindo bem!</button>
+        <router-link to="/chat" style="color: #808B96; margin-left: 39%">
+          <button type="button" name="button">Outro</button>
+        </router-link>
+      </div>
     </div>
-  <h5 id='mal'>{{pergunta}}</h5>
-  <div slot="footer" class="secondary toolbar absolute-bottom flex wrap">
-    <button type="button" name="button">Tenho dúvidas sobre o que estou sentindo</button>
-    <button type="button" name="button">Não estou me sentindo bem!</button>
-    <router-link to="/chat" style="color: #ffffff; margin-left: 45%">
-      <button type="button" name="button">Outro</button>
-    </router-link>
-</div>
-</div>
+  </div>
 </template>
 <script>
   export default {
@@ -24,6 +26,8 @@
   }
 </script>
 <style lang="styl" scoped>
+  .c
+    border-radius 5px
   .mal
     text-align center
     color #808B96
@@ -37,5 +41,5 @@
   .mal button
     font-size 13px
     width 100%
-    padding 4%
+
 </style>
