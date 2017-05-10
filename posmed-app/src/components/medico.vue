@@ -57,7 +57,7 @@ export default {
       }
       axios({
         method: 'post',
-        url: 'http://localhost:8081/medicos',
+        url: 'http://posmed.sytes.net:8081/medicos',
         params: {
           obj: c,
           molecule: 'medico',

@@ -9,25 +9,31 @@
 		<div class="container">
 			<div class="row">
 				<div class="card" style="padding-right: 10px; padding-left: 10px">
-					<q-parallax src="https://static.sharecare.com/promo/avatars/physician_avatar.png" :height="150">
+					<q-parallax src="http://cdn2.hubspot.net/hub/441120/file-2752707415-jpg/blog-files/dra.-maria-isabel.jpg" :height="150">
 						<div slot="loading">Loading...</div>
 					</q-parallax>
 
 					<div class="card-title text-center">
-						Drª Maria Izabel
+						Dra. {{medico.name}}
 
 					</div>
 
 
-					<div class="card-title">
-						<p > - Pacientes</p>
-						<q-search v-model="searchModel"></q-search>
-					</div>
+
 
 					<div class="list item-delimiter">
+						<div class="toolbar text-center">
+							<q-toolbar-title :padding="1">
+								Pacientes
+							</q-toolbar-title>
+						</div>
+						<br>
+						<q-search v-model="searchModel"></q-search>
+						<br>
+
 						<q-collapsible icon="face" label="Marcus Santos">
 							<div>
-								Milagre! Cura da visão. Aqui você não ganha mais $$$
+								Milagre! Cura da visão. Aqui você não ganha mais
 							</div>
 						</q-collapsible>
 						<q-collapsible icon="face" label="Sostenes Freitas">
@@ -43,35 +49,34 @@
 
 					</div>
 
-				
-					
-
 					<br>
-						<q-pagination v-model="page" :mim="1" :max="17"></q-pagination>
-					
+					<q-pagination v-model="page" :mim="1" :max="17"></q-pagination>
+
 
 				</div>
 				<div class="card" style="width: 200%; padding-right: 10px">
-					
+
 					<div class="card">
 						<div class="item two-lines">
-							<img class="item-primary" :src="'https://exelord.github.io/ember-initials/images/default-d5f51047d8bd6327ec4a74361a7aae7f.jpg'">
+							<img class="item-primary" :src="'https://instagram.frec3-2.fna.fbcdn.net/t51.2885-19/s320x320/13736795_834349220033285_699892460_a.jpg'">
 							<div class="item-content">
 								<div>Marcus Santos</div>
 								<div>Amil</div>
 							</div>
 						</div>
 
-						
 
-					
+
+
 
 							 <q-collapsible icon="alarm_add" label="Metas">
-							
 
 
-							<div class="list">
-								
+
+							 <div class="class" style="background-color: #ffffff">
+
+							<div class="list" >
+
 								<div class="list-label inset">Atividade Fisica</div>
 								<div class="item two-lines" v-for="n in 2">
 									<div class="item-primary bg-grey-6 text-white">
@@ -82,7 +87,7 @@
 										<div>Dormir 8 Horas</div>
 										<div>todos os Dias</div>
 									</div>
-									<i class="item-secondary">delete_forever</i>
+										<div class="item-secondary item-link"><button>	<i class="">delete_forever</i> </button></div>
 								</div>
 								<hr class="inset">
 								<div class="list-label inset">Dieta</div>
@@ -95,10 +100,12 @@
 										<div>Adicionar ao almoço</div>
 										<div>Diaria</div>
 									</div>
-									<i class="item-secondary">delete_forever</i>
+
+									<div class="item-secondary item-link"><button>	<i class="">delete_forever</i> </button></div>
+
 								</div>
 								<hr class="inset">
-							
+
 							</div>
 
 							<div class="card">
@@ -110,19 +117,19 @@
 								</div>
 							</div>
 
-
+							</div>
 							</q-collapsible>
-						
 
-							
-						
+
+
+
 
 						 <q-collapsible icon="local_pharmacy" label="Medicamentos">
 
-							
+
 
 							<div class="list">
-								
+
 								<div class="item two-lines" v-for="n in 1">
 									<div class="item-primary bg-grey-6 text-white">
 										<i class="material-icons">healing</i>
@@ -132,9 +139,9 @@
 										<div>8 Horas em 8 H</div>
 										<div>5 Dias</div>
 									</div>
-									<i class="item-secondary">delete_forever</i>
+									<div class="item-secondary item-link"><button >	<i class="">delete_forever</i> </button></div>
 								</div>
-								
+
 								<br>
 							</div>
 
@@ -150,9 +157,9 @@
 
 							</q-collapsible>
 
-							
-							
-							
+
+
+
 
 							<q-collapsible icon="done_all" label="Indicadores" >
 
@@ -184,7 +191,7 @@
 									<hr class="inset">
 								</div>
 							</q-collapsible>
-					
+
 					</div>
 
 
@@ -230,8 +237,48 @@
 	</div>
 </div>
 </template>
+
+<script>
+  /* eslint-disable */
+import axios from 'axios'
+let medico = ''
+export default {
+	 data () {
+		 return {
+			medico
+		 }
+	},
+
+	created () {
+		this.getMedico('590ddbf60bf5bb5e2423f824')
+	},
+
+	methods: {
+		getMedico(id) {
+			axios ({
+				method: 'post',
+				url: 'http://posmed.sytes.net:8081/medicos',
+				params: {
+					_id: id,
+					molecule: 'medico',
+					type: 'find'
+				}
+			}).then(response => {
+				this.medico = response.data[0]
+				console.log(this.medico.name)
+			}).catch(error => {
+				console.log(error)
+			})
+		}
+	}
+}
+
+
+
+</script>
+
 <style lang="stylus">
 	.container
 		padding-top 10px
-	
+
 </style>

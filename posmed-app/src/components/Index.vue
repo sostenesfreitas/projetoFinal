@@ -11,6 +11,9 @@
         </router-link>
         <router-link to='/medicos'><button class="btn primary outline full-width">Listar Médicos</button>
         </router-link>
+        <br>
+        <router-link to='/consulta'><button class="btn primary outline full-width" v-on:click="create()">Cadastrar Consulta</button>
+        </router-link>
 
       </div>
     </div>

@@ -28,18 +28,6 @@
                 <input class="auto" v-model="cpf">
               </div>
             </div>
-          <div class="item two-lines">
-            <div class="item-content row items-center wrap">
-              <div style="margin-right: 10px;" class="item-label">Nome:</div>
-                <input class="auto" v-model="nome">
-              </div>
-          </div>
-          <div class="item two-lines">
-            <div class="item-content row items-center wrap">
-                    <div style="margin-right: 10px;" class="item-label">Operadora:</div>
-                    <input class="auto" v-model="operadora">
-                  </div>
-                </div>
                 <div class="item two-lines">
                    <div class="item-content row items-center wrap">
                      <div style="margin-right: 10px;" class="item-label">Telefone:</div>
@@ -58,7 +46,25 @@
                        <input class="auto" v-model="dt_nascimento">
                      </div>
                    </div>
+                   <div class="item two-lines">
+                     <div class="item-content row items-center wrap">
+                    <div style="margin-right: 10px;" class="item-label">Operadora:</div>
+                    <input class="auto" v-model="operadora">
+                  </div>
+                   <div class="item two-lines">
+                     <div class="item-content row items-center wrap">
+                       <div style="margin-right: 10px;" class="item-label">Nome operadora:</div>
+                         <input class="auto" v-model="nome">
+                       </div>
+                   </div>
+                </div>
+                <div>
+                  <br />
+                  <br />
+                  <br />
                    <button class="btn positive outline full-width" v-on:click="create()">Cadastrar</button>
+                </div>
+
           </div>
     </div>
   </div>
@@ -72,15 +78,15 @@ export default {
   data () {
     return {
       model: '',
-      name: 'sostenes',
-      sobrenome: 'doido',
-      cpf: '00903380498',
-      nome: 'amil',
-      operadora: 'sei la',
-      codigo_ans: '12',
-      numeroTelefone: '1231414',
-      sexo: 'masculino',
-      dt_nascimento: '31/05/1995',
+      name: '',
+      sobrenome: '',
+      cpf: '',
+      nome: '',
+      operadora: '',
+      codigo_ans: '11',
+      numeroTelefone: '',
+      sexo: '',
+      dt_nascimento: '',
       logradouro: 'sei la',
       numero: '817',
       complemento: 'doido',
@@ -115,7 +121,7 @@ export default {
       }
       axios({
         method: 'post',
-        url: 'http://localhost:8081/paciente',
+        url: 'http://posmed.sytes.net:8081/paciente',
         params: {
           obj: c,
           molecule: 'paciente',

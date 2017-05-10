@@ -5,15 +5,19 @@
         Listagem de Pacientes
       </q-toolbar-title>
     </div>
-    <div class="body flex justify-center">
-
-<div v-for="paciente in pacientes">
-  <p>Nome: {{paciente.name}}</p>
-  <p>Crm: {{paciente.cpf}}</p>
-  <p>Especializacao: {{paciente.sexo}}</p>
-</div>
+    <div class="body column justify-center">
+              <p class="caption text-center">Paciente</p>
+              <hr>
+              <div class="card" v-for="paciente in pacientes">
+                <div class="card-header">Paciente: {{paciente.name}} {{paciente.sobrenome}}</div>
+                <div class="card-content">
+                  <div class="card-content-inner">CPF: {{paciente.cpf}}</div>
+                  <div class="card-content-inner">ID: {{paciente._id}}</div>
+                </div>
+              </div>
+    </div>
         <button class="btn positive outline full-width" v-on:click="findAll()">Listar pacientes</button>
-      
+
     </div>
   </div>
 
@@ -21,25 +25,30 @@
 <script>
 
 import axios from 'axios'
-
+var pacientes = []
 export default {
   data () {
     return {
-      pacientes: []
+      pacientes
     }
   },
   methods: {
     findAll () {
+      var c = []
+      c = {
+        pacientes: this.pacientes
+      }
       axios({
         method: 'post',
-        url: 'http://localhost:8081/paciente',
+        url: 'http://posmed.sytes.net:8081/paciente',
         params: {
+          obj: c,
           molecule: 'paciente',
           type: 'findAll'
         }
       }).then(response => {
-        console.log(response.data)
         this.pacientes = response.data
+        console.log(pacientes)
       }).catch(error => {
         console.log(error)
       })

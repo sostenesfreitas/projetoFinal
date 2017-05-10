@@ -65,13 +65,13 @@
                <div class="item two-lines">
                   <div class="item-content row items-center wrap">
                     <div style="margin-right: 10px;" class="item-label">Inicio:</div>
-                    <q-select type="radio" v-model="select" :options="selectOptions"></q-select>
+                    <q-datetime v-model="modelInicio" type="date" label="Selecionar data"></q-datetime>
                   </div>
                 </div>
                 <div class="item two-lines">
                    <div class="item-content row items-center wrap">
                      <div style="margin-right: 10px;" class="item-label">Termino:</div>
-                     <q-select type="radio" v-model="select" :options="selectOptions"></q-select>
+                     <q-datetime v-model="modelTermino" type="date" label="Selecionar data"></q-datetime>
                    </div>
                  </div>
              </div>
@@ -105,6 +105,10 @@
     </div>
 
     <button class="positive outline absolute-bottom-right" style="right: 18px; bottom: 18px;" v-on:click="create()">Cadastrar</button>
+
+
+           <button class="btn positive outline full-width" v-on:click="findAndUpdate('00903380498')">VAI FILHÃO</button>
+
   </div>
 </template>
 <script>
@@ -114,19 +118,21 @@ let selectOptions = []
 export default {
   data () {
     return {
-      model: '',
-      consultaDiagnostico: 'louco',
-      cuidadosDescricao: 'paulada',
-      medicamentosNome: 'litio',
-      medicamentosFrequencia: 'todo dia',
-      medicamentosPeriodo: '01/01',
-      medicamentosPosologia: 'sei la',
-      metasDescricao: 'parar de ser doido',
-      metasFrequencia: 'todo dia',
-      metasPrazo: 'sempre',
-      select: 'medicos',
-      cpf: '00903380498',
+      modelInicio: '',
+      modelTermino: '',
+      consultaDiagnostico: '',
+      cuidadosDescricao: '',
+      medicamentosNome: '',
+      medicamentosFrequencia: '',
+      medicamentosPeriodo: '',
+      medicamentosPosologia: '',
+      metasDescricao: '',
+      metasFrequencia: '',
+      metasPrazo: '',
+      select: '',
+      cpf: '',
       selectOptions
+
     }
   },
   mounted () {
@@ -148,8 +154,8 @@ export default {
           nome: this.medicamentosNome,
           frequencia: this.medicamentosFrequencia,
           periodo: [{
-            data_inicial: '01/01',
-            data_final: '02/02'
+            data_inicial: this.modelInicio,
+            data_final: this.modelTermino
           }],
           posologia: this.medicamentosPosologia
         }],
@@ -161,7 +167,7 @@ export default {
       }
       axios({
         method: 'post',
-        url: 'http://localhost:8081/consulta',
+        url: 'http://posmed.sytes.net:8081/consulta',
         params: {
           obj: c,
           molecule: 'consulta',
@@ -177,7 +183,7 @@ export default {
     getMedicos () {
       axios({
         method: 'post',
-        url: 'http://localhost:8081/medicos',
+        url: 'http://posmed.sytes.net:8081/medicos',
         params: {
           molecule: 'medico',
           type: 'findAll'
@@ -187,7 +193,7 @@ export default {
         response.data.forEach(value => {
           selectOptions.push({
             label: (value.name),
-            value: [(value.crm), (value.name)]
+            value: [(value.crm), (value.name), (value._id)]
           })
         })
       }).catch(error => {
@@ -197,12 +203,64 @@ export default {
     findAndUpdate (cpf, _id) {
       axios({
         method: 'post',
-        url: 'http://localhost:8081/paciente',
+        url: 'http://posmed.sytes.net:8081/paciente',
         params: {
           cpf: cpf,
           molecule: 'paciente',
           type: 'findOneAndUpdate',
           consultas: _id
+        }
+      }).then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    findMetaAndUpdate (id) {
+      var meta = {
+        descricao: this.metasDescricao,
+        frequencia: this.metasFrequencia,
+        prazo: this.metasPrazo
+      }
+      axios({
+        method: 'post',
+        url: 'http://posmed.sytes.net:8081/consulta',
+        params: {
+          _id: id,
+          molecule: 'consulta',
+          type: 'findMetaAndUpdate',
+          metas: meta
+        }
+      }).then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getPacientes (cpf) {
+      axios({
+        method: 'post',
+        url: 'http://posmed.sytes.net:8081/paciente',
+        params: {
+          cpf: cpf,
+          molecule: 'paciente',
+          type: 'find'
+        }
+      }).then(response => {
+        this.findPacienteAndUpdate(response.data._id)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    findPacienteAndUpdate (id) {
+      axios({
+        method: 'post',
+        url: 'http://posmed.sytes.net:8081/medicos',
+        params: {
+          _id: this.select[2],
+          molecule: 'medico',
+          type: 'findPacienteAndUpdate',
+          paciente: id
         }
       }).then(response => {
         console.log(response)
