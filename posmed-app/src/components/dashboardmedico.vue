@@ -101,7 +101,7 @@
 
 							<div class="card">
 								<div class="card-title">
-									<button class="primary" @click="clickMethod()">
+									<button class="primary" @click="addMark()">
 										<i class="material-icons">add</i>
 										Incluir Meta
 									</button>
@@ -139,7 +139,7 @@
 
 							<div class="card">
 								<div class="card-title">
-									<button class="secondary" @click="clickMethod()">
+									<button class="secondary" @click="addMedicines()">
 										<i class="material-icons">add</i>
 										Incluir Medicamentos
 									</button>
@@ -192,22 +192,7 @@
 					<div>
 						<div class="layout-padding">
 							
-							<div class="list" style="max-width: 600px;">
-								
-							<hr>
-							<div class="list-label">Incluir Dados</div>
-							<div
-							class="item item-link"
-							v-for="dialog in form"
-							@click="dialog.handler()"
-							>
-							<i class="item-primary">{{dialog.icon}}</i>
-							<div class="item-content has-secondary">
-								<div>{{dialog.label}}</div>
-							</div>
-							<i class="item-secondary">keyboard_arrow_right</i>
-						</div>
-					</div>
+							
 
 					
 				</div>
@@ -225,97 +210,14 @@
 import { Dialog, Toast } from 'quasar'
 import axios from 'axios'
 let medico = ''
+let name = ''
 let pacientes = []
 export default {
 	 data () {
 		 return {
 			medico,
-			pacientes,
-			form: [
-        {
-          label: 'Medicamentos',
-          icon: 'help',
-          handler () {
-            Dialog.create({
-              title: 'Incluir Medicamentos',
-              message: 'Preescreva o medicamento para o seu paciente',
-              form: {
-                name: {
-                  type: 'textbox',
-                  label: 'Nome',
-                  model: ''
-                },
-                age: {
-                  type: 'numeric',
-                  label: 'Frequência (Dia)',
-                  model: 10,
-                  min: 5,
-                  max: 90
-                },
-                comments: {
-                  type: 'textarea',
-                  label: 'Observação',
-                  model: ''
-                }
-              },
-              buttons: [
-                'Cancel',
-                {
-                  label: 'Ok',
-                  handler (data) {
-                    Toast.create("Medicamento Cadastrado")
-                  }
-                }
-              ]
-            })
-          }
-        },
-         {
-          label: 'Metas',
-          icon: 'help',
-          handler () {
-            Dialog.create({
-              title: 'Incluir Metas',
-              message: 'Informe a meta que o seu paciente deve seguir',
-              form: {
-                name: {
-                  type: 'textbox',
-                  label: 'Descrição',
-                  model: ''
-                },
-                age: {
-                  type: 'numeric',
-                  label: 'Frequencia (Dias)',
-                  model: 10,
-                  min: 5,
-                  max: 90
-                },
-                tags: {
-                  type: 'chips',
-                  label: 'Tipo',
-                  model: ['Dieta', 'Atividade Fisica']
-                },
-                comments: {
-                  type: 'textarea',
-                  label: 'Observação',
-                  model: ''
-                }
-              },
-              buttons: [
-                'Cancel',
-                {
-                  label: 'Ok',
-                  handler (data) {
-                    Toast.create('Returned ' + JSON.stringify(data))
-                  }
-                }
-              ]
-            })
-          }
-        },
-        
-
-      ]
+			name,
+			pacientes
 		 }
 	},
 
@@ -340,7 +242,93 @@ export default {
 			}).catch(error => {
 				console.log(error)
 			})
+		},
+
+		addMedicines(){
+			
+			form: [
+			Dialog.create({
+				title: 'Incluir Medicamentos',
+				message: 'Preescreva o medicamento para o seu paciente',
+				form: {
+					name: {
+						type: 'textbox',
+						label: 'Nome',
+						model: ''
+					},
+					age: {
+						type: 'numeric',
+						label: 'Frequência (Dia)',
+						model: 10,
+						min: 5,
+						max: 90
+					},
+					comments: {
+						type: 'textarea',
+						label: 'Observação',
+						model: ''
+					}
+				},
+				buttons: [
+				'Cancel',
+				{
+					label: 'Ok',
+					handler (data) {
+						Toast.create(JSON.stringify(data.name))
+					}
+				}
+				]
+
+			})
+			]
+		},
+
+		addMark() {
+			form: [
+		            Dialog.create({
+		              title: 'Incluir Metas',
+		              message: 'Informe a metas para o seu paciente',
+		              form: {
+                name: {
+                  type: 'textbox',
+                  label: 'Descrição',
+                  model: ''
+                },
+                age: {
+                  type: 'numeric',
+                  label: 'Frequencia (Dias)',
+                  model: 10,
+                  min: 5,
+                  max: 90
+                },
+                tags: {
+                  type: 'chips',
+                  label: 'Tipo',
+                  model: ['Dieta', 'Atividade Fisica']
+                },
+                comments: {
+                  type: 'textarea',
+                  label: 'Observação',
+                  model: ''
+                }
+              },
+		              buttons: [
+		                'Cancel',
+		                {
+		                  label: 'Ok',
+		                  handler (data) {
+		                    Toast.create("Medicamento Cadastrado")
+		                  }
+		                }
+		              ]
+		            })
+		          
+		        
+			
+
+			]
 		}
+
 	}
 }
 </script>
