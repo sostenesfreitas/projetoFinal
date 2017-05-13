@@ -31,22 +31,13 @@
 						<q-search v-model="searchModel"></q-search>
 						<br>
 
-						<q-collapsible icon="face" label="Marcus Santos">
-							<div>
-								Milagre! Cura da visão. Aqui você não ganha mais
-							</div>
-						</q-collapsible>
-						<q-collapsible icon="face" label="Sostenes Freitas">
-							<div>
-								Sostenes Freitas
-							</div>
-						</q-collapsible>
-						<q-collapsible icon="face" label="Fernando Careca">
-							<div>
-								Fernando "Careca"
-							</div>
-						</q-collapsible>
-
+						<div v-for="paciente in pacientes" >
+							<q-collapsible icon="face" :label="paciente.name">
+								<div>
+									Milagre! Cura da visão. Aqui você não ganha mais
+								</div>
+							</q-collapsible>
+						</div>
 					</div>
 
 					<br>
@@ -242,10 +233,12 @@
   /* eslint-disable */
 import axios from 'axios'
 let medico = ''
+let pacientes = []
 export default {
 	 data () {
 		 return {
-			medico
+			medico,
+			pacientes
 		 }
 	},
 
@@ -261,24 +254,20 @@ export default {
 				params: {
 					_id: id,
 					molecule: 'medico',
-					type: 'find'
+					type: 'populate',
+					populate: 'pacientes'
 				}
 			}).then(response => {
-				this.medico = response.data[0]
-				console.log(this.medico.name)
+				this.medico = response.data
+				this.pacientes = this.medico.pacientes
 			}).catch(error => {
 				console.log(error)
 			})
 		}
 	}
 }
-
-
-
 </script>
-
-<style lang="stylus">
-	.container
-		padding-top 10px
-
+	<style lang="stylus">
+		.container
+			padding-top 10px
 </style>
