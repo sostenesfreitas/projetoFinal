@@ -8,7 +8,7 @@
 
 		<div class="container">
 			<div class="row">
-				<div class="card" style="padding-right: 10px; padding-left: 10px">
+				<div class="card" style="padding-right: 10px; padding-left: 10px;  max-width: 350px;">
 					<q-parallax src="http://cdn2.hubspot.net/hub/441120/file-2752707415-jpg/blog-files/dra.-maria-isabel.jpg" :height="150">
 						<div slot="loading">Loading...</div>
 					</q-parallax>
@@ -45,7 +45,7 @@
 
 
 				</div>
-				<div class="card" style="width: 200%; padding-right: 10px">
+				<div class="card" style="width: 150%; padding-right: 10px">
 
 					<div class="card">
 						<div class="item two-lines">
@@ -189,16 +189,60 @@
 				</div>
 
 				<div class="card" style="padding-right: 10px">
-					<div>
-						<div class="layout-padding">
-							
-							
-
-					
+					<q-layout>
+    <div class="layout-view">
+      <!-- Header Toolbar -->
+      <div slot="header" class="c toolbar ">
+        <div class="user_container row">
+          <div class="">
+            <router-link to="/" style="color: #ffffff">
+              <i>keyboard_arrow_left</i>
+            </router-link>
+          </div>
+          <div class="user" style="margin-left: 10px;">
+            <p>Chat</p>
+         </div>
+        </div>
+      </div>
+      <!-- Input Footer -->
+      <div class="hello">
+        <!-- Message received from peer -->
+        <div class="msg" v-for="m in messages">
+          <div class="chat-other" v-if="!isUser(m.uid)">
+            <div class="chat-user">
+              <img :src="m.user">
+            </div>
+            <div class="chat-date">
+              <timeago :auto-update="autoUpdate" :max-time="86400 * 365" :locale="en-US" class="timeago" :since="m.created - 60000"></timeago>
+            </div>
+            <div class="chat-message">
+              <p>
+                {{m.msg}}
+              </p>
+            </div>
+          </div>
+          <div class="chat-you" v-if="isUser(m.uid)">
+            <div class="chat-user">
+              <img :src="m.user">
+            </div>
+            <div class="chat-date">
+              <timeago :auto-update="autoUpdate" :max-time="86400 * 365" :locale="en-US" class="timeago" :since="m.created - 60000"></timeago>
+            </div>
+            <div class="chat-message">
+              <p>
+                {{m.msg}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div slot="footer" class="toolbar c">
+    <input @keyup.enter="send(message)" class="full-width" type="text" v-model="message" placeholder="Digite aqui...">
+  </div>
+  </q-layout>
 				</div>
-			</div>
 		</div>
-			</div>
 
 		</div>
 	</div>
@@ -207,22 +251,36 @@
 
 <script>
   /* eslint-disable */
+import { LocalStorage } from 'quasar'
 import { Dialog, Toast } from 'quasar'
 import axios from 'axios'
 let medico = ''
 let name = ''
 let pacientes = []
+var user = {
+  name: '',
+  email: '',
+  id: '',
+  avatar: ''
+}
 export default {
 	 data () {
 		 return {
-			medico,
-			name,
-			pacientes
+		 	medico,
+		 	name,
+		 	pacientes,
+		 	user,
+		 	message: null,
+		 	messages: []
 		 }
 	},
 
 	created () {
 		this.getMedico('590ddbf60bf5bb5e2423f824')
+		this.loginCache()
+    	this.$options.sockets.listenForMessage = (message) => {
+        		this.messages.push(message)
+   		 	}
 	},
 
 	methods: {
@@ -322,17 +380,51 @@ export default {
 		                }
 		              ]
 		            })
-		          
-		        
-			
-
 			]
+		},
+
+		loginCache () {
+			user.id = LocalStorage.get.item('id')
+			user.avatar = LocalStorage.get.item('avatar')
+			user.name = LocalStorage.get.item('name')
+		},
+		send: function (message) {
+			let hora = new Date().getTime()
+			var data = {
+				created: hora,
+				uid: user.uid,
+				msg: message,
+				user: user.avatar
+			}
+			this.$socket.emit('listenForMessage', data)
+			this.message = ''
+		},
+		isUser: uid => {
+			return user.uid === uid
+		},
+		hora: function () {
+			var hour = new Date().getTime()
+			return hour
 		}
 
+	},
+
+	watch: {
+		messages: function () {
+			setTimeout(function () {
+				var container = this.$el.querySelector('.msg')
+				container.scrollTop(999999999)
+			}, 100)
+		}
 	}
 }
 </script>
 	<style lang="stylus">
 		.container
 			padding-top 10px
+		.c
+			background-color: #0a3f5e
+		.hello
+			width 100%
+			padding 4%	
 </style>

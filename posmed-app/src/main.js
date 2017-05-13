@@ -9,6 +9,8 @@ require(`quasar/dist/quasar.${__THEME}.css`)
 import Vue from 'vue'
 import Quasar from 'quasar'
 import router from './router'
+import VueSocketio from 'vue-socket.io'
+Vue.use(VueSocketio, 'http://posmed.sytes.net:8082')
 
 Vue.use(Quasar) // Install Quasar Framework
 
