@@ -107,7 +107,7 @@
     <button class="positive outline absolute-bottom-right" style="right: 18px; bottom: 18px;" v-on:click="create()">Cadastrar</button>
 
 
-           <button class="btn positive outline full-width" v-on:click="findAndUpdate('00903380498')">VAI FILHÃO</button>
+           <!-- <button class="btn positive outline full-width" v-on:click="findAndUpdate('00903380498')">VAI FILHÃO</button> -->
 
   </div>
 </template>

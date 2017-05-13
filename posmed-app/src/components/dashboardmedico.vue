@@ -1,13 +1,13 @@
 <template>
-	<div class="body">
+	<q-layout>
 		<div slot="header" class="toolbar bg-secondary">
 			<q-toolbar-title :padding="0">
 				DASHBOARD | MEDICO | POSMED
 			</q-toolbar-title>
 		</div>
 
-		<div class="container">
-			<div class="row">
+
+			<div class="container row">
 				<div class="card" style="padding-right: 10px; padding-left: 10px;  max-width: 350px;">
 					<q-parallax src="http://cdn2.hubspot.net/hub/441120/file-2752707415-jpg/blog-files/dra.-maria-isabel.jpg" :height="150">
 						<div slot="loading">Loading...</div>
@@ -15,18 +15,14 @@
 
 					<div class="card-title text-center">
 						Dra. {{medico.name}}
-
 					</div>
-
-
-
 
 					<div class="list item-delimiter">
 						<div class="toolbar text-center">
 							<q-toolbar-title :padding="1">
 								Pacientes
 							</q-toolbar-title>
-						</div>
+					</div>
 						<br>
 						<q-search v-model="searchModel"></q-search>
 						<br>
@@ -42,8 +38,6 @@
 
 					<br>
 					<q-pagination v-model="page" :mim="1" :max="17"></q-pagination>
-
-
 				</div>
 				<div class="card" style="width: 150%; padding-right: 10px">
 
@@ -55,19 +49,9 @@
 								<div>Amil</div>
 							</div>
 						</div>
-
-
-
-
-
-							 <q-collapsible icon="alarm_add" label="Metas">
-
-
-
-							 <div class="class" style="background-color: #ffffff">
-
-							<div class="list" >
-
+				 <q-collapsible icon="alarm_add" label="Metas">
+				 <div class="class" style="background-color: #ffffff">
+						<div class="list" v-for="">
 								<div class="list-label inset">Atividade Fisica</div>
 								<div class="item two-lines" v-for="n in 2">
 									<div class="item-primary bg-grey-6 text-white">
@@ -102,7 +86,7 @@
 							<div class="card">
 								<div class="card-title">
 									<button class="primary" @click="addMark()">
-										<i class="material-icons">add</i>
+z										<i class="material-icons">add</i>
 										Incluir Meta
 									</button>
 								</div>
@@ -110,15 +94,7 @@
 
 							</div>
 							</q-collapsible>
-
-
-
-
-
 						 <q-collapsible icon="local_pharmacy" label="Medicamentos">
-
-
-
 							<div class="list">
 
 								<div class="item two-lines" v-for="n in 1">
@@ -244,9 +220,8 @@
 				</div>
 		</div>
 
-		</div>
-	</div>
-</div>
+
+</q-layout>
 </template>
 
 <script>
@@ -255,7 +230,7 @@ import { LocalStorage } from 'quasar'
 import { Dialog, Toast } from 'quasar'
 import axios from 'axios'
 let medico = ''
-let name = ''
+let paciente = ''
 let pacientes = []
 var user = {
   name: '',
@@ -267,7 +242,7 @@ export default {
 	 data () {
 		 return {
 		 	medico,
-		 	name,
+		 	paciente,
 		 	pacientes,
 		 	user,
 		 	message: null,
@@ -303,7 +278,7 @@ export default {
 		},
 
 		addMedicines(){
-			
+
 			form: [
 			Dialog.create({
 				title: 'Incluir Medicamentos',
@@ -382,7 +357,23 @@ export default {
 		            })
 			]
 		},
-
+		getPaciente(cpf) {
+			axios ({
+				method: 'post',
+				url: 'http://posmed.sytes.net:8081/paciente',
+				params: {
+					cpf: cpf,
+					molecule: 'paciente',
+					type: 'populate',
+					populate: 'consultas'
+				}
+			}).then(response => {
+				this.paciente = response.data
+				console.log(this.paciente)
+			}).catch(error => {
+				console.log(error)
+			})
+		},
 		loginCache () {
 			user.id = LocalStorage.get.item('id')
 			user.avatar = LocalStorage.get.item('avatar')
@@ -421,10 +412,12 @@ export default {
 </script>
 	<style lang="stylus">
 		.container
+			width 100%
+		.container
 			padding-top 10px
 		.c
 			background-color: #0a3f5e
 		.hello
 			width 100%
-			padding 4%	
+			padding 4%
 </style>
