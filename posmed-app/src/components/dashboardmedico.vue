@@ -189,39 +189,30 @@
 				</div>
 
 				<div class="card" style="padding-right: 10px">
-					<q-parallax src="https://static.sharecare.com/promo/avatars/physician_avatar.png" :height="150">
-						<div slot="loading">Loading...</div>
-					</q-parallax>
-
-					<div class="card-title text-center">
-						Drª Maria Izabel
-
+					<div>
+						<div class="layout-padding">
+							
+							<div class="list" style="max-width: 600px;">
+								
+							<hr>
+							<div class="list-label">Incluir Dados</div>
+							<div
+							class="item item-link"
+							v-for="dialog in form"
+							@click="dialog.handler()"
+							>
+							<i class="item-primary">{{dialog.icon}}</i>
+							<div class="item-content has-secondary">
+								<div>{{dialog.label}}</div>
+							</div>
+							<i class="item-secondary">keyboard_arrow_right</i>
+						</div>
 					</div>
 
-
-					<div class="card-title">
-						<p > - Pacientes</p>
-					</div>
-					<div class="list item-delimiter">
-						<q-collapsible icon="face" label="Luna">
-							<div>
-								Milagre! Cura da visão. Aqui você não ganha mais $$$
-							</div>
-						</q-collapsible>
-						<q-collapsible icon="face" label="Glauber">
-							<div>
-								Sostenes Freitas
-							</div>
-						</q-collapsible>
-						<q-collapsible icon="face" label="Melo">
-							<div>
-								Fernando "Careca"
-							</div>
-						</q-collapsible>
-					</div>
-
-
+					
 				</div>
+			</div>
+		</div>
 			</div>
 
 		</div>
@@ -231,6 +222,7 @@
 
 <script>
   /* eslint-disable */
+import { Dialog, Toast } from 'quasar'
 import axios from 'axios'
 let medico = ''
 let pacientes = []
@@ -238,7 +230,92 @@ export default {
 	 data () {
 		 return {
 			medico,
-			pacientes
+			pacientes,
+			form: [
+        {
+          label: 'Medicamentos',
+          icon: 'help',
+          handler () {
+            Dialog.create({
+              title: 'Incluir Medicamentos',
+              message: 'Preescreva o medicamento para o seu paciente',
+              form: {
+                name: {
+                  type: 'textbox',
+                  label: 'Nome',
+                  model: ''
+                },
+                age: {
+                  type: 'numeric',
+                  label: 'Frequência (Dia)',
+                  model: 10,
+                  min: 5,
+                  max: 90
+                },
+                comments: {
+                  type: 'textarea',
+                  label: 'Observação',
+                  model: ''
+                }
+              },
+              buttons: [
+                'Cancel',
+                {
+                  label: 'Ok',
+                  handler (data) {
+                    Toast.create("Medicamento Cadastrado")
+                  }
+                }
+              ]
+            })
+          }
+        },
+         {
+          label: 'Metas',
+          icon: 'help',
+          handler () {
+            Dialog.create({
+              title: 'Incluir Metas',
+              message: 'Informe a meta que o seu paciente deve seguir',
+              form: {
+                name: {
+                  type: 'textbox',
+                  label: 'Descrição',
+                  model: ''
+                },
+                age: {
+                  type: 'numeric',
+                  label: 'Frequencia (Dias)',
+                  model: 10,
+                  min: 5,
+                  max: 90
+                },
+                tags: {
+                  type: 'chips',
+                  label: 'Tipo',
+                  model: ['Dieta', 'Atividade Fisica']
+                },
+                comments: {
+                  type: 'textarea',
+                  label: 'Observação',
+                  model: ''
+                }
+              },
+              buttons: [
+                'Cancel',
+                {
+                  label: 'Ok',
+                  handler (data) {
+                    Toast.create('Returned ' + JSON.stringify(data))
+                  }
+                }
+              ]
+            })
+          }
+        },
+        
+
+      ]
 		 }
 	},
 
