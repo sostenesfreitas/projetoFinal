@@ -42,14 +42,16 @@ export default {
     getMetas () {
       axios({
         method: 'post',
-        url: 'http://192.168.98.7:8081/consulta',
+        url: 'http://posmed.sytes.net:8081/paciente',
         params: {
-          molecule: 'consulta',
-          type: 'findAll'
+          molecule: 'paciente',
+          type: 'populate',
+          cpf: '39345777172',
+          populate: 'consultas'
         }
       }).then(response => {
         var t = response.data
-        t.forEach(r => {
+        t.consultas.forEach(r => {
           r.metas.forEach(meta => {
             metas.length = 0
             metas.push(meta)

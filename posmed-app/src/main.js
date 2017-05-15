@@ -10,8 +10,10 @@ import Vue from 'vue'
 import Quasar from 'quasar'
 import router from './router'
 import VueSocketio from 'vue-socket.io'
-Vue.use(VueSocketio, 'http://posmed.sytes.net:8082')
+import Vue2Filters from 'vue2-filters'
 
+Vue.use(VueSocketio, 'http://posmed.sytes.net:8082')
+Vue.use(Vue2Filters)
 Vue.use(Quasar) // Install Quasar Framework
 
 Quasar.start(() => {

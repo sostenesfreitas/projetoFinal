@@ -1,19 +1,7 @@
 <template>
   <q-layout>
     <div class="layout-view">
-      <!-- Header Toolbar -->
-      <div slot="header" class="c toolbar ">
-        <div class="user_container row">
-          <div class="">
-            <router-link to="/" style="color: #ffffff">
-              <i>keyboard_arrow_left</i>
-            </router-link>
-          </div>
-          <div class="user" style="margin-left: 10px;">
-            <p>Chat</p>
-         </div>
-        </div>
-      </div>
+
       <!-- Input Footer -->
       <div class="hello">
         <!-- Message received from peer -->
@@ -48,7 +36,7 @@
       </div>
   </div>
   <div slot="footer" class="toolbar c">
-    <input @keyup.enter="send(message)" class="full-width" type="text" v-model="message" placeholder="Digite aqui...">
+    <input @keyup.enter="send(message)" class="full-width text-white" type="text" v-model="message" placeholder="Digite aqui...">
   </div>
   </q-layout>
 </template>

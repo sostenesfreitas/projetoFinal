@@ -10,17 +10,8 @@ import Vue from 'vue'
 import Quasar from 'quasar'
 import router from './router'
 import VueSocketio from 'vue-socket.io'
-Vue.use(VueSocketio, 'http://192.168.98.7:8082')
-import VueTimeago from 'vue-timeago'
+Vue.use(VueSocketio, 'http://posmed.sytes.net:8082')
 
-Vue.use(VueTimeago, {
-  name: 'timeago', // component name, `timeago` by default
-  locale: 'en-US',
-  locales: {
-    // you will need json-loader in webpack 1
-    'en-US': require('vue-timeago/locales/en-US.json')
-  }
-})
 Vue.use(Quasar) // Install Quasar Framework
 
 Quasar.start(() => {
