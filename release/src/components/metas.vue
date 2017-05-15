@@ -25,6 +25,7 @@
 </template>
 <script>
 import axios from 'axios'
+import { LocalStorage } from 'quasar'
 var metas = []
 var medicamentos = []
 export default {
@@ -40,13 +41,14 @@ export default {
   },
   methods: {
     getMetas () {
+      var email = LocalStorage.get.item('email')
       axios({
         method: 'post',
         url: 'http://posmed.sytes.net:8081/paciente',
         params: {
           molecule: 'paciente',
           type: 'populate',
-          cpf: '39345777172',
+          email: email,
           populate: 'consultas'
         }
       }).then(response => {

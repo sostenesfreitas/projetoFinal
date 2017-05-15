@@ -63,6 +63,7 @@ export default {
           user.id = data.id
           user.avatar = data.avatar
           LocalStorage.set('id', user.id)
+          LocalStorage.set('email', user.email)
           LocalStorage.set('avatar', user.avatar)
           LocalStorage.set('name', user.name)
         })

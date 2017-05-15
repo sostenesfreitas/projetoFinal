@@ -50,7 +50,7 @@
         <q-collapsible icon="alarm_add" label="Metas">
           <div class="class" style="background-color: #ffffff">
             <div class="list" v-for="consulta in paciente.consultas">
-              <div class="item two-lines" v-for="meta in consulta.metas">
+              <div class="item two-lines" v-for="meta, key in consulta.metas">
                 <div class="item-primary bg-grey-6 text-white">
                   <i class="material-icons">directions_run</i>
                 </div>
@@ -59,10 +59,14 @@
 					        <div> {{meta.frequencia}}</div>
 					        <div> {{meta.prazo}}</div>
                 </div>
-              <!--  <div class="item-secondary item-link"><button>	<i class="">delete_forever</i> </button></div>-->
+                <div class="item-secondary item-link">
+                  <button @click="delMeta(key, consulta, meta, paciente)" >
+                    <i class="">delete_forever</i>
+                  </button>
+                </div>
               </div>
               <hr class="inset">
-							<button class="bg-secondary text-white" @click="addMark(consulta, paciente)" style="margin: 2%">
+							<button class="bg-secondary text-white" @click="addMark(consulta, paciente)"  style="margin: 2%">
 								<i class="material-icons">add</i>
 									Incluir Meta
 							</button>
@@ -72,7 +76,7 @@
 				<!-- Medicamentos -->
         <q-collapsible icon="local_pharmacy" label="Medicamentos">
           <div class="list" v-for="consulta in paciente.consultas">
-            <div class="item two-lines" v-for="medicamento in consulta.medicamentos">
+            <div class="item two-lines" v-for="medicamento, key in consulta.medicamentos">
               <div class="item-primary bg-grey-6 text-white">
                 <i class="material-icons">healing</i>
               </div>
@@ -81,14 +85,18 @@
 				        <div>{{medicamento.frequencia}}</div>
 				        <div>{{medicamento.posologia}}</div>
               </div>
-              <!--<div class="item-secondary item-link"><button>	<i class="">delete_forever</i> </button></div>-->
+              <div class="item-secondary item-link">
+                <button @click="delMedi(key, consulta, medicamento, paciente)">
+                  <i class="">delete_forever</i>
+                </button>
+              </div>
             </div>
             <br>
+            <button class="secondary" @click="addMedicines(consulta, paciente)" style="margin: 2%">
+  						<i class="material-icons">add</i>
+  							Incluir Medicamentos
+  					</button>
           </div>
-          <button class="secondary" @click="addMedicines()" style="margin: 2%">
-						<i class="material-icons">add</i>
-							Incluir Medicamentos
-					</button>
         </q-collapsible>
 				<!-- Indicadores -->
         <q-collapsible icon="done_all" label="Indicadores">
@@ -211,11 +219,11 @@ export default {
     getMedico (id) {
       axios({
         method: 'post',
-        url: 'http://posmed.sytes.net:8081/medicos',
+        url: 'http://localhost:8081/medicos',
         params: {
-          _id: id,
+          _id: '58e4f00c23a3a618babfcc5d',
           molecule: 'medico',
-          type: 'populate',
+          type: 'populateMedico',
           populate: 'pacientes'
         }
       }).then(response => {
@@ -225,27 +233,25 @@ export default {
         console.log(error)
       })
     },
-    addMedicines () {
+    addMedicines (consulta, paciente) {
       form: [
         Dialog.create({
           title: 'Incluir Medicamentos',
           message: 'Preescreva o medicamento para o seu paciente',
           form: {
-            name: {
+            nome: {
               type: 'textbox',
               label: 'Nome',
               model: ''
             },
-            age: {
-              type: 'numeric',
+            frequencia: {
+              type: 'textbox',
               label: 'Frequência (Dia)',
-              model: 10,
-              min: 5,
-              max: 90
+              model: ''
             },
-            comments: {
-              type: 'textarea',
-              label: 'Observação',
+            posologia: {
+              type: 'textbox',
+              label: 'Posologia',
               model: ''
             }
           },
@@ -254,7 +260,23 @@ export default {
             {
               label: 'Ok',
               handler (data) {
-                Toast.create(JSON.stringify(data.name))
+                Toast.create('Medicamento Cadastrado')
+                axios({
+					        method: 'post',
+					        url: 'http://localhost:8081/consulta',
+					        params: {
+					          _id: consulta._id,
+					          molecule: 'consulta',
+					          type: 'findMedicamentoAndUpdate',
+					          medicamento: data
+					        }
+					      }).then(response => {
+                  paciente.consultas.forEach( v => {
+                    v.medicamentos.push(data)
+                  })
+					      }).catch(error => {
+					        console.log(error)
+					      })
               }
             }
           ]
@@ -289,30 +311,69 @@ export default {
               label: 'Ok',
               handler (data) {
                 Toast.create("Medicamento Cadastrado")
-							/*	axios({
+								axios({
 					        method: 'post',
-					        url: 'http://posmed.sytes.net:8081/consulta',
+					        url: 'http://localhost:8081/consulta',
 					        params: {
-					          _id: consulta._id,
+					          _id: consulta._id, // consulta._id,
 					          molecule: 'consulta',
-					          type: '',
-					          meta: data
+					          type: 'findMetaAndUpdate',
+					          metas: data
 					        }
 					      }).then(response => {
-					        this.getPaciente(paciente.cpf)
+                  paciente.consultas.forEach( v => {
+                    v.metas.push(data)
+                  })
 					      }).catch(error => {
 					        console.log(error)
-					      }) */
+					      })
               }
             }
           ]
         })
       ]
     },
+		delMeta (index, consulta, meta, paciente) {
+      console.log(index)
+			axios({
+        method: 'post',
+        url: 'http://localhost:8081/consulta',
+        params: {
+          id: consulta._id,
+          molecule: 'consulta',
+          type: 'findMetaAndDelete',
+          deleteUid: meta._id
+        }
+      }).then(response => {
+        paciente.consultas.forEach( v => {
+          v.metas.splice(index, 1)
+        })
+      }).catch(error => {
+        console.log(error)
+      })
+		},
+    delMedi (index, consulta, medicamento, paciente) {
+      axios({
+        method: 'post',
+        url: 'http://localhost:8081/consulta',
+        params: {
+          id: consulta._id,
+          molecule: 'consulta',
+          type: 'findMedicamentoDelete',
+          deleteUid: medicamento._id
+        }
+      }).then(response => {
+        paciente.consultas.forEach( v => {
+          v.medicamentos.splice(index, 1)
+        })
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     getPaciente (cpf) {
       axios({
         method: 'post',
-        url: 'http://posmed.sytes.net:8081/paciente',
+        url: 'http://localhost:8081/paciente',
         params: {
           cpf: cpf,
           molecule: 'paciente',
