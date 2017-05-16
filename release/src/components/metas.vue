@@ -8,6 +8,7 @@
         <p>Nome: {{medicamento.nome}}</p>
         <p>Frequencia: {{medicamento.frequencia}}</p>
         <p>Posologia: {{medicamento.posologia}}</p>
+        <button type="button" class="bg-positive push text-white" @click="feito(medicamento)">Feito</button>
       </div>
     </div>
 
@@ -25,7 +26,7 @@
 </template>
 <script>
 import axios from 'axios'
-import { LocalStorage } from 'quasar'
+import { LocalStorage, Toast } from 'quasar'
 var metas = []
 var medicamentos = []
 export default {
@@ -40,11 +41,15 @@ export default {
     this.getMetas()
   },
   methods: {
+    feito (indicador) {
+      Toast.create('test ' + indicador)
+      this.$socket.emit('Indicador', indicador)
+    },
     getMetas () {
       var email = LocalStorage.get.item('email')
       axios({
         method: 'post',
-        url: 'http://posmed.sytes.net:8081/paciente',
+        url: 'http://192.168.0.103:8081/paciente',
         params: {
           molecule: 'paciente',
           type: 'populate',

@@ -26,7 +26,7 @@
         <br>
         <div v-for="paciente in pacientes" style="cursor:pointer">
 					<hr />
-          <div class="text-center" @click="getPaciente(paciente.cpf)" style="color: #8c8c8c; width:auto">
+          <div class="text-center" @click="getPaciente(paciente.email)" style="color: #8c8c8c; width:auto">
           	<h6 >{{ paciente.name | capitalize }}</h6>
 						<i style="padding-top: 2%">account_circle</i>
           </div>
@@ -114,16 +114,15 @@
             </div>
             <hr class="inset">
 
-            <div class="item two-lines" v-for="n in 1">
-              <div class="item-primary bg-red-6 text-white">
+            <div class="item two-lines" v-for="indicador in indicadores">
+              <div class="item-primary bg-blue-6 text-white">
                 <i class="material-icons">healing</i>
               </div>
               <div class="item-content has-secondary">
-                <div>Toragesic</div>
-                <div>Cancelado</div>
-                <div>Reação Alérgica</div>
+                <div>{{indicador.nome}}</div>
+                <div>Realizado</div>
               </div>
-              <i class="item-secondary">event_busy</i>
+              <i class="item-secondary">event_available</i>
             </div>
             <hr class="inset">
           </div>
@@ -205,7 +204,8 @@ export default {
       pacientes,
       user,
       message: null,
-      messages: []
+      messages: [],
+      indicadores: []
     }
   },
   created () {
@@ -213,6 +213,9 @@ export default {
     this.loginCache()
     this.$options.sockets.listenForMessage = (message) => {
       this.messages.push(message)
+    }
+    this.$options.sockets.Indicador = (indicador) => {
+      this.indicadores.push(indicador)
     }
   },
   methods: {
@@ -370,12 +373,12 @@ export default {
         console.log(error)
       })
     },
-    getPaciente (cpf) {
+    getPaciente (email) {
       axios({
         method: 'post',
         url: 'http://localhost:8081/paciente',
         params: {
-          cpf: cpf,
+          email: email,
           molecule: 'paciente',
           type: 'populate',
           populate: 'consultas'
