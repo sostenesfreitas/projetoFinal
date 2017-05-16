@@ -19,8 +19,8 @@
       return {
         parabens: 'Parabéns! Continue o bom trabalho.',
         aceita: 'Aceita uma dica de saúde ?',
-        tituloDica: 'Dicas para viver bem com Diabetes - Tua Saúde',
-        dica: 'A diabetes é uma doença que leva ao excesso de açúcar no sangue.'
+        tituloDica: 'Recomendações para quem tem catarata.',
+        dica: 'Evitar a exposição aos raios UVA dos equipamentos bronzeadores. Os raios ultravioleta solares (UVB) são menos prejudiciais.'
       }
     }
   }

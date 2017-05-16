@@ -101,12 +101,12 @@
 				<!-- Indicadores -->
         <q-collapsible icon="done_all" label="Indicadores">
           <div class="list">
-            <div class="item two-lines" v-for="n in 1">
+            <div class="item two-lines" v-for="meta in metas">
               <div class="item-primary bg-green-6 text-white">
                 <i class="material-icons">directions_run</i>
               </div>
               <div class="item-content has-secondary">
-                <div>Respouso</div>
+                <div>{{meta.descricao}}</div>
                 <div>Realizado</div>
                 <div>Em cumprimento</div>
               </div>
@@ -205,26 +205,30 @@ export default {
       user,
       message: null,
       messages: [],
-      indicadores: []
+      indicadores: [],
+      metas: []
     }
   },
   created () {
-    this.getMedico('590ddbf60bf5bb5e2423f824')
+    this.getMedico()
     this.loginCache()
     this.$options.sockets.listenForMessage = (message) => {
       this.messages.push(message)
     }
-    this.$options.sockets.Indicador = (indicador) => {
-      this.indicadores.push(indicador)
+    this.$options.sockets.Medicamento = (medicamento) => {
+      this.indicadores.push(medicamento)
+    }
+    this.$options.sockets.Meta = (meta) => {
+      this.metas.push(meta)
     }
   },
   methods: {
     getMedico (id) {
       axios({
         method: 'post',
-        url: 'http://localhost:8081/medicos',
+        url: 'http://posmed.sytes.net:8081/medicos',
         params: {
-          _id: '58e4f00c23a3a618babfcc5d',
+          _id: '590ddbf60bf5bb5e2423f824',
           molecule: 'medico',
           type: 'populateMedico',
           populate: 'pacientes'
@@ -266,7 +270,7 @@ export default {
                 Toast.create('Medicamento Cadastrado')
                 axios({
 					        method: 'post',
-					        url: 'http://localhost:8081/consulta',
+					        url: 'http://posmed.sytes.net:8081/consulta',
 					        params: {
 					          _id: consulta._id,
 					          molecule: 'consulta',
@@ -316,7 +320,7 @@ export default {
                 Toast.create("Medicamento Cadastrado")
 								axios({
 					        method: 'post',
-					        url: 'http://localhost:8081/consulta',
+					        url: 'http://posmed.sytes.net:8081/consulta',
 					        params: {
 					          _id: consulta._id, // consulta._id,
 					          molecule: 'consulta',
@@ -340,7 +344,7 @@ export default {
       console.log(index)
 			axios({
         method: 'post',
-        url: 'http://localhost:8081/consulta',
+        url: 'http://posmed.sytes.net:8081/consulta',
         params: {
           id: consulta._id,
           molecule: 'consulta',
@@ -358,7 +362,7 @@ export default {
     delMedi (index, consulta, medicamento, paciente) {
       axios({
         method: 'post',
-        url: 'http://localhost:8081/consulta',
+        url: 'http://posmed.sytes.net:8081/consulta',
         params: {
           id: consulta._id,
           molecule: 'consulta',
@@ -376,7 +380,7 @@ export default {
     getPaciente (email) {
       axios({
         method: 'post',
-        url: 'http://localhost:8081/paciente',
+        url: 'http://posmed.sytes.net:8081/paciente',
         params: {
           email: email,
           molecule: 'paciente',
@@ -394,7 +398,7 @@ export default {
       user.avatar = LocalStorage.get.item('avatar')
       user.name = LocalStorage.get.item('name')
     },
-    send: function (message) {
+    send (message) {
       let hora = new Date().getTime()
       var data = {
         created: hora,
@@ -405,10 +409,10 @@ export default {
       this.$socket.emit('listenForMessage', data)
       this.message = ''
     },
-    isUser: uid => {
+    isUser (uid) {
       return user.uid === uid
     },
-    hora: function () {
+    hora () {
       var hour = new Date().getTime()
       return hour
     }

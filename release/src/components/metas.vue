@@ -20,6 +20,7 @@
         <p>Descrição: {{meta.descricao}}</p>
         <p>Frequencia: {{meta.frequencia}}</p>
         <p>Prazo: {{meta.prazo}}</p>
+        <button type="button" class="bg-positive push text-white" @click="done(meta)">Feito</button>
       </div>
     </div>
   </div>
@@ -41,15 +42,17 @@ export default {
     this.getMetas()
   },
   methods: {
-    feito (indicador) {
-      Toast.create('test ' + indicador)
-      this.$socket.emit('Indicador', indicador)
+    feito (medicamento) {
+      this.$socket.emit('Medicamento', medicamento)
+    },
+    done (meta) {
+      this.$socket.emit('Meta', meta)
     },
     getMetas () {
       var email = LocalStorage.get.item('email')
       axios({
         method: 'post',
-        url: 'http://192.168.0.103:8081/paciente',
+        url: 'http://posmed.sytes.net:8081/paciente',
         params: {
           molecule: 'paciente',
           type: 'populate',
