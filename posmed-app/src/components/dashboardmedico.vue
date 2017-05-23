@@ -187,6 +187,7 @@
 /* eslint-disable */
 import { Dialog, LocalStorage, Toast } from 'quasar'
 import axios from 'axios'
+var md5 = require('js-md5')
 let medico = ''
 let paciente = ''
 let pacientes = []
@@ -210,6 +211,7 @@ export default {
     }
   },
   created () {
+    md5('Message to hash')
     this.getMedico()
     this.loginCache()
     this.$options.sockets.listenForMessage = (message) => {

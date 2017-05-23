@@ -27,7 +27,7 @@
 </template>
 <script>
 import axios from 'axios'
-import { LocalStorage, Toast } from 'quasar'
+import { LocalStorage } from 'quasar'
 var metas = []
 var medicamentos = []
 export default {

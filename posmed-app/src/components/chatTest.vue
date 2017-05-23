@@ -59,7 +59,7 @@ export default {
     }
   },
   created () {
-    this.loginCache()
+    // this.loginCache()
     this.getMsg()
     this.$options.sockets.listenForMessage = (message) => {
       this.messages.push(message)
@@ -115,6 +115,7 @@ export default {
         }
       }).then(response => {
         this.messages = response.data
+        console.log(this.messages)
       }).catch(error => {
         console.log(error)
       })
