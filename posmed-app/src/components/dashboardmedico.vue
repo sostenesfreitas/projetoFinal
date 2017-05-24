@@ -26,7 +26,7 @@
         <br>
         <div v-for="paciente in pacientes" style="cursor:pointer">
 					<hr />
-          <div class="text-center" @click="getPaciente(paciente.email)" style="color: #8c8c8c; width:auto">
+          <div class="text-center" @click="getPaciente(paciente)" style="color: #8c8c8c; width:auto">
           	<h6 >{{ paciente.name | capitalize }}</h6>
 						<i style="padding-top: 2%">account_circle</i>
           </div>
@@ -211,7 +211,6 @@ export default {
     }
   },
   created () {
-    md5('Message to hash')
     this.getMedico()
     this.loginCache()
     this.$options.sockets.listenForMessage = (message) => {
@@ -379,18 +378,35 @@ export default {
         console.log(error)
       })
     },
-    getPaciente (email) {
+    getPaciente (user) {
+      this.user = user
+      this.getMsg()
       axios({
         method: 'post',
         url: 'http://posmed.sytes.net:8081/paciente',
         params: {
-          email: email,
+          email: user.email,
           molecule: 'paciente',
           type: 'populate',
           populate: 'consultas'
         }
       }).then(response => {
         this.paciente = response.data
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getMsg () {
+      axios({
+        method: 'post',
+        url: 'http://posmed.sytes.net:8081/chat',
+        params: {
+          molecule: 'chat',
+          type: 'findChat',
+          chat: md5(this.user._id + this.medico._id)
+        }
+      }).then(response => {
+        this.messages = response.data
       }).catch(error => {
         console.log(error)
       })
@@ -404,10 +420,24 @@ export default {
       let hora = new Date().getTime()
       var data = {
         created: hora,
-        uid: '2',
+        uid: this.medico._id,
         msg: message,
-        user: 'http://photos.doctoralia.com/635796699763356882_2.jpg'
+        user: 'http://photos.doctoralia.com/635796699763356882_2.jpg',
+        chat: md5(this.user._id + this.medico._id)
       }
+       axios({
+        method: 'post',
+        url: 'http://posmed.sytes.net:8081/chat',
+        params: {
+          molecule: 'chat',
+          type: 'create',
+          obj: data
+        }
+      }).then(response => {
+        this.paciente = response.data
+      }).catch(error => {
+        console.log(error)
+      })
       this.$socket.emit('listenForMessage', data)
       this.message = ''
     },
