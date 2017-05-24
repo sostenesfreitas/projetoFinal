@@ -13,6 +13,8 @@
 </template>
 
 <script>
+  import { LocalStorage } from 'quasar'
+  import axios from 'axios'
   export default {
     name: 'Explicacao',
     data () {
@@ -21,6 +23,28 @@
         aceita: 'Aceita uma dica de saúde ?',
         tituloDica: 'Recomendações para quem tem catarata.',
         dica: 'Evitar a exposição aos raios UVA dos equipamentos bronzeadores. Os raios ultravioleta solares (UVB) são menos prejudiciais.'
+      }
+    },
+    created () {
+      this.getPaciente()
+    },
+    methods: {
+      getPaciente () {
+        var email = LocalStorage.get.item('email')
+        axios({
+          method: 'post',
+          url: 'http://posmed.sytes.net:8081/paciente',
+          params: {
+            molecule: 'paciente',
+            type: 'populate',
+            email: email,
+            populate: 'consultas'
+          }
+        }).then(response => {
+          LocalStorage.set('idB', response.data._id)
+        }).catch(error => {
+          console.log(error)
+        })
       }
     }
   }

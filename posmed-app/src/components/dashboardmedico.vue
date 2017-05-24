@@ -107,8 +107,8 @@
               </div>
               <div class="item-content has-secondary">
                 <div>{{meta.descricao}}</div>
+                <div>{{meta.created}}</div>
                 <div>Realizado</div>
-                <div>Em cumprimento</div>
               </div>
               <i class="item-secondary">event_available</i>
             </div>
@@ -120,6 +120,7 @@
               </div>
               <div class="item-content has-secondary">
                 <div>{{indicador.nome}}</div>
+                <div>{{indicador.created}}</div>
                 <div>Realizado</div>
               </div>
               <i class="item-secondary">event_available</i>
@@ -187,6 +188,7 @@
 /* eslint-disable */
 import { Dialog, LocalStorage, Toast } from 'quasar'
 import axios from 'axios'
+var moment = require('moment')
 var md5 = require('js-md5')
 let medico = ''
 let paciente = ''
@@ -211,15 +213,18 @@ export default {
     }
   },
   created () {
+    moment.locale('pt-br')
     this.getMedico()
     this.loginCache()
     this.$options.sockets.listenForMessage = (message) => {
       this.messages.push(message)
     }
     this.$options.sockets.Medicamento = (medicamento) => {
+      medicamento.created = moment().format('LLL')
       this.indicadores.push(medicamento)
     }
     this.$options.sockets.Meta = (meta) => {
+      meta.created = moment().format('LLL')
       this.metas.push(meta)
     }
   },
@@ -403,10 +408,11 @@ export default {
         params: {
           molecule: 'chat',
           type: 'findChat',
-          chat: md5(this.user._id + this.medico._id)
+          chat: md5(this.user._id + this.medico.crm)
         }
       }).then(response => {
         this.messages = response.data
+        console.log(this.user._id)
       }).catch(error => {
         console.log(error)
       })
@@ -423,7 +429,7 @@ export default {
         uid: this.medico._id,
         msg: message,
         user: 'http://photos.doctoralia.com/635796699763356882_2.jpg',
-        chat: md5(this.user._id + this.medico._id)
+        chat: md5(this.user._id + this.medico.crm)
       }
        axios({
         method: 'post',
@@ -442,7 +448,7 @@ export default {
       this.message = ''
     },
     isUser (uid) {
-      return user.uid === uid
+      return this.medico._id === uid
     },
     hora () {
       var hour = new Date().getTime()

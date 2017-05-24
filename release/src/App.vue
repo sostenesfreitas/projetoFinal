@@ -26,7 +26,6 @@
     <!-- Tab Footer -->
     <q-tabs slot="footer" class="c" v-show="user.id">
       <q-tab icon="feedback" route="/" exact replace>Feedback</q-tab>
-      <q-tab icon="local_pharmacy" route="/medicamento" replace>Medicamentos</q-tab>
       <q-tab icon="assignment_turned_in" route="/metas" replace>Metas</q-tab>
     </q-tabs>
     </q-layout>
@@ -37,6 +36,7 @@
 import { LocalStorage } from 'quasar'
 var user = {
   name: '',
+  idB: '',
   email: '',
   id: '',
   avatar: ''
@@ -76,6 +76,7 @@ export default {
     },
     loginCache () {
       user.id = LocalStorage.get.item('id')
+      user.email = LocalStorage.get.item('email')
       user.avatar = LocalStorage.get.item('avatar')
       user.name = LocalStorage.get.item('name')
     },
@@ -83,6 +84,8 @@ export default {
       LocalStorage.remove('id')
       LocalStorage.remove('avatar')
       LocalStorage.remove('name')
+      LocalStorage.remove('idB')
+      LocalStorage.remove('email')
       window.location.reload()
     }
   }

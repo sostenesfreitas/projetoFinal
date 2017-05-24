@@ -1,40 +1,40 @@
 <template>
-  <div class="container">
-    <div class="c card column">
-      <div class="card-title" style="background-color: #e4e4e4">
-        Medicamento
+  <q-layout>
+    <div class="layout-view container">
+      <div class="c card column" v-for="medicamento in medicamentos">
+        <div class="card-title row justify-between" style="background-color: #e4e4e4">
+          <h6>Medicamento</h6>
+          <button type="button" class="bg-positive push text-white" @click="feito(medicamento)">Feito</button>
+        </div>
+        <div class="card-content column" >
+          <p>Nome: {{medicamento.nome}}</p>
+          <p>Frequencia: {{medicamento.frequencia}}</p>
+          <p>Posologia: {{medicamento.posologia}}</p>
+        </div>
       </div>
-      <div class="card-content column" v-for="medicamento in medicamentos">
-        <p>Nome: {{medicamento.nome}}</p>
-        <p>Frequencia: {{medicamento.frequencia}}</p>
-        <p>Posologia: {{medicamento.posologia}}</p>
-        <button type="button" class="bg-positive push text-white" @click="feito(medicamento)">Feito</button>
-      </div>
-    </div>
 
-    <div class="c card column">
-      <div class="card-title" style="background-color: #e4e4e4">
-        Metas
-      </div>
-      <div class="card-content column" v-for="meta in metas">
-        <p>Descrição: {{meta.descricao}}</p>
-        <p>Frequencia: {{meta.frequencia}}</p>
-        <p>Prazo: {{meta.prazo}}</p>
-        <button type="button" class="bg-positive push text-white" @click="done(meta)">Feito</button>
+      <div class="c card column" v-for="meta in metas">
+        <div class="card-title row justify-between" style="background-color: #e4e4e4">
+          <h6>Metas</h6>
+          <button type="button" class="bg-positive push text-white" @click="done(meta)">Feito</button>
+        </div>
+        <div class="card-content column">
+          <p>Descrição: {{meta.descricao}}</p>
+          <p>Frequencia: {{meta.frequencia}}</p>
+          <p>Prazo: {{meta.prazo}}</p>
+        </div>
       </div>
     </div>
-  </div>
+  </q-layout>
 </template>
 <script>
 import axios from 'axios'
 import { LocalStorage } from 'quasar'
-var metas = []
-var medicamentos = []
 export default {
   data () {
     return {
-      metas,
-      medicamentos,
+      metas: [],
+      medicamentos: [],
       option: false
     }
   },
@@ -62,14 +62,10 @@ export default {
       }).then(response => {
         var t = response.data
         t.consultas.forEach(r => {
-          r.metas.forEach(meta => {
-            metas.length = 0
-            metas.push(meta)
-          })
-          r.medicamentos.forEach(medicamento => {
-            medicamentos.length = 0
-            medicamentos.push(medicamento)
-          })
+          this.metas.length = 0
+          this.medicamentos.length = 0
+          this.metas = r.metas
+          this.medicamentos = r.medicamentos
         })
       }).catch(error => {
         console.log(error)

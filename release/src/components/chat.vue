@@ -47,6 +47,7 @@ var user = {
   name: '',
   email: '',
   uid: '',
+  idB: '',
   avatar: ''
 }
 import { LocalStorage } from 'quasar'
@@ -68,9 +69,9 @@ export default {
   methods: {
     /* eslint-disable */
     loginCache () {
-      user.uid = LocalStorage.get.item('id')
       user.avatar = LocalStorage.get.item('avatar')
       user.name = LocalStorage.get.item('name')
+      user.idB = LocalStorage.get.item('idB')
     },
     send (message) {
       let hora = new Date().getTime()
@@ -79,11 +80,11 @@ export default {
         uid: user.uid,
         msg: message,
         user: user.avatar,
-        chat: md5(user.uid + 'test')
+        chat: md5(user.idB + '15580')
       }
       axios({
         method: 'post',
-        url: 'http://192.168.0.103:8081/chat',
+        url: 'http://posmed.sytes.net:8081/chat',
         params: {
           molecule: 'chat',
           type: 'create',
@@ -98,7 +99,7 @@ export default {
       this.message = ''
     },
     isUser (uid) {
-      return user.uid === uid
+      return user.idB === uid
     },
     hora () {
       var hour = new Date().getTime()
@@ -107,11 +108,11 @@ export default {
     getMsg () {
       axios({
         method: 'post',
-        url: 'http://192.168.0.103:8081/chat',
+        url: 'http://posmed.sytes.net:8081/chat',
         params: {
           molecule: 'chat',
           type: 'findChat',
-          chat: md5(user.uid + 'test')
+          chat: md5(user.idB + '15580')
         }
       }).then(response => {
         this.messages = response.data
