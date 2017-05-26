@@ -16,6 +16,7 @@ export default new VueRouter({
     { path: '/medico', component: load('medico') },
     { path: '/medicos', component: load('medicos') },
     { path: '/painel', component: load('Index') },
+    { path: '/test', component: load('searchTest') },
     { path: '*', component: load('Error404') } // Not found
   ]
 })

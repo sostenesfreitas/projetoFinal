@@ -35,17 +35,24 @@ export default {
     return {
       metas: [],
       medicamentos: [],
-      option: false
+      option: true
     }
   },
   created () {
     this.getMetas()
+    this.$options.sockets.listenForMedicine = (message) => {
+      this.medicamentos.push(message)
+    }
+    this.$options.sockets.listenForMetas = (message) => {
+      this.metas.push(message)
+    }
   },
   methods: {
     feito (medicamento) {
       this.$socket.emit('Medicamento', medicamento)
     },
     done (meta) {
+      this.option = false
       this.$socket.emit('Meta', meta)
     },
     getMetas () {

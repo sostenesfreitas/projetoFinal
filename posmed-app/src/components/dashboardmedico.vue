@@ -22,12 +22,12 @@
           </q-toolbar-title>
         </div>
         <br>
-        <q-search v-model="searchModel"></q-search>
+        <q-search v-model="query"></q-search>
         <br>
-        <div v-for="paciente in pacientes" style="cursor:pointer">
+        <div v-for="item in tableFilter" style="cursor:pointer">
 					<hr />
-          <div class="text-center" @click="getPaciente(paciente)" style="color: #8c8c8c; width:auto">
-          	<h6 >{{ paciente.name | capitalize }}</h6>
+          <div class="text-center" v-for="(head, key) in columns" @click="getPaciente(item)" style="color: #8c8c8c; width:auto">
+          	<h6 >{{item[key]}}</h6>
 						<i style="padding-top: 2%">account_circle</i>
           </div>
         </div>
@@ -192,24 +192,32 @@ var moment = require('moment')
 var md5 = require('js-md5')
 let medico = ''
 let paciente = ''
-let pacientes = []
+// let pacientes = []
 var user = {
   name: '',
   email: '',
   id: '',
   avatar: ''
 }
+
 export default {
   data () {
     return {
+      query: '',
       medico,
       paciente,
-      pacientes,
+      pacientes: [],
       user,
       message: null,
       messages: [],
       indicadores: [],
-      metas: []
+      metas: [],
+      columns: {
+        name: {
+          displayname: 'name',
+          sortorder: 1
+        }
+      },
     }
   },
   created () {
@@ -228,7 +236,20 @@ export default {
       this.metas.push(meta)
     }
   },
+  computed: {
+    tableFilter: function () {
+      return this.findBy(this.pacientes, this.query, 'name')
+    }
+  },
   methods: {
+    test (data) {
+      this.$socket.emit('listenForMetas', data)
+    },
+    findBy (list, value, column) {
+      return list.filter((item) => {
+        return item[column].includes(value)
+      })
+    },
     getMedico (id) {
       axios({
         method: 'post',
@@ -272,7 +293,7 @@ export default {
             'Cancel',
             {
               label: 'Ok',
-              handler (data) {
+              handler: (data) => {
                 Toast.create('Medicamento Cadastrado')
                 axios({
 					        method: 'post',
@@ -290,6 +311,7 @@ export default {
 					      }).catch(error => {
 					        console.log(error)
 					      })
+              this.$socket.emit('listenForMedicine', data)
               }
             }
           ]
@@ -322,8 +344,8 @@ export default {
             'Cancel',
             {
               label: 'Ok',
-              handler (data) {
-                Toast.create("Medicamento Cadastrado")
+              handler: (data) => {
+                Toast.create("Metas Cadastrado")
 								axios({
 					        method: 'post',
 					        url: 'http://posmed.sytes.net:8081/consulta',
@@ -337,6 +359,7 @@ export default {
                   paciente.consultas.forEach( v => {
                     v.metas.push(data)
                   })
+                  this.$socket.emit('listenForMetas', data)
 					      }).catch(error => {
 					        console.log(error)
 					      })
@@ -440,7 +463,7 @@ export default {
           obj: data
         }
       }).then(response => {
-        this.paciente = response.data
+        // this.paciente = response.data
       }).catch(error => {
         console.log(error)
       })
