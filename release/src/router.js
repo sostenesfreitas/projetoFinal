@@ -24,7 +24,8 @@ export default new VueRouter({
           ]},
       {path: '/medico', component: load('medico')},
       {path: '/medicamento', component: load('medicamentos')},
-      {path: 'metas', component: load('metas')}
+      {path: '/metas', component: load('metas')},
+      {path: '/bot', component: load('chatBot')}
       ]
     },
     {path: '/chat', component: load('chat')}

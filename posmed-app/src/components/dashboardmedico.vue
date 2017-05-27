@@ -1,13 +1,27 @@
 <template>
 <q-layout>
+  <!-- login -->
+  <div class="l" v-if="!medico._id">
+    <img class="imagem" src="../assets/p.png" alt="">
+    <div class="co column ">
+      <input class="text-white" v-model="crm" placeholder="Crm">
+      <input class="text-white" v-model="password" placeholder="Password">
+      <button type="button" class="gbtn push negative full-width" @click="login(crm, password)">
+          Login</button>
+    </div>
+  </div>
   <!-- Header -->
-  <div slot="header" class="toolbar bg-secondary">
+  <div slot="header" class="toolbar bg-secondary" v-if="medico._id">
     <q-toolbar-title :padding="0">
       DASHBOARD | MEDICO | POSMED
+
     </q-toolbar-title>
+    <button style="margin-left: 40%" @click="logout()">
+          <i>exit_to_app</i>
+        </button>
   </div>
   <!-- Medico -->
-  <div class="container row">
+  <div class="container row" v-if="medico._id">
     <div class="card" style="padding-right: 10px; padding-left: 10px;  max-width: 350px;">
       <q-parallax src="http://photos.doctoralia.com/635796699763356882_2.jpg" :height="150">
         <div slot="loading">Loading...</div>
@@ -205,6 +219,8 @@ export default {
     return {
       query: '',
       medico,
+      crm: '15580',
+      password: '123456',
       paciente,
       pacientes: [],
       user,
@@ -222,7 +238,7 @@ export default {
   },
   created () {
     moment.locale('pt-br')
-    this.getMedico()
+    // this.getMedico()
     this.loginCache()
     this.$options.sockets.listenForMessage = (message) => {
       this.messages.push(message)
@@ -242,8 +258,26 @@ export default {
     }
   },
   methods: {
-    test (data) {
-      this.$socket.emit('listenForMetas', data)
+    login (crm, password)  {
+      axios({
+        method: 'post',
+        url: 'http://posmed.sytes.net:8081/medicos',
+        params: {
+          crm: crm,
+          password: password,
+          molecule: 'medico',
+          type: 'populateMedico',
+          populate: 'pacientes'
+        }
+      }).then(response => {
+        this.medico = response.data
+        this.pacientes = this.medico.pacientes
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    logout () {
+      window.location.reload()
     },
     findBy (list, value, column) {
       return list.filter((item) => {
@@ -489,6 +523,16 @@ export default {
 }
 </script>
 	<style lang="stylus">
+    .imagem
+      margin 10% 0 0 37%
+    input
+      margin 15px 0 15px 0
+    .l
+      width 100%
+      background-color #00164e
+    .co
+      width 30%
+      margin 5% 0 0 34%
 		.container
 			width 100%
 		.hello

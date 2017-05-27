@@ -27,6 +27,7 @@
     <q-tabs slot="footer" class="c" v-show="user.id">
       <q-tab icon="feedback" route="/" exact replace>Feedback</q-tab>
       <q-tab icon="assignment_turned_in" route="/metas" replace>Metas</q-tab>
+      <q-tab icon="local_hospital" route="/bot" replace>Dr.Watson</q-tab>
     </q-tabs>
     </q-layout>
   </div>

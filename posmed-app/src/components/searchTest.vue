@@ -1,6 +1,9 @@
 <template>
   <div>
     <div class="layout-padding">
+      <iframe src="http://posmed.sytes.net:8083">
+
+      </iframe>
       <div id="demo">
         <q-search v-model="query"></q-search>
         <div v-for="item in tableFilter">
@@ -68,3 +71,8 @@ export default {
   }
 }
 </script>
+<style lang="stylus" scoped>
+  iframe
+    width 100%
+    height 500px
+</style>
