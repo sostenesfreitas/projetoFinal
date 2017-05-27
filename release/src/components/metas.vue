@@ -30,6 +30,7 @@
 <script>
 import axios from 'axios'
 import { LocalStorage } from 'quasar'
+var moment = require('moment')
 export default {
   data () {
     return {
@@ -49,11 +50,44 @@ export default {
   },
   methods: {
     feito (medicamento) {
+      moment.locale('pt-br')
+      medicamento.created = moment().format('LLL')
+      var idb = LocalStorage.get.item('idB')
+      medicamento.id_paciente = idb
       this.$socket.emit('Medicamento', medicamento)
+      axios({
+        method: 'post',
+        url: 'http://posmed.sytes.net:8081/indicadorMedicamento',
+        params: {
+          molecule: 'indicadorMedicamento',
+          type: 'create',
+          obj: medicamento
+        }
+      }).then(response => {
+
+      }).catch(error => {
+        console.log(error)
+      })
     },
     done (meta) {
-      this.option = false
+      moment.locale('pt-br')
+      meta.created = moment().format('LLL')
+      var idb = LocalStorage.get.item('idB')
+      meta.id_paciente = idb
       this.$socket.emit('Meta', meta)
+      axios({
+        method: 'post',
+        url: 'http://posmed.sytes.net:8081/indicadormeta',
+        params: {
+          molecule: 'indicadormeta',
+          type: 'create',
+          obj: meta
+        }
+      }).then(response => {
+
+      }).catch(error => {
+        console.log(error)
+      })
     },
     getMetas () {
       var email = LocalStorage.get.item('email')
