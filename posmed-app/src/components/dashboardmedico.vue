@@ -71,7 +71,7 @@
                 <div class="item-content has-secondary">
 									<div> {{meta.descricao}}</div>
 					        <div> {{meta.frequencia}}</div>
-					        <div> {{meta.prazo}}</div>
+					        <div> {{meta.periodo}}</div>
                 </div>
                 <div class="item-secondary item-link">
                   <button @click="delMeta(key, consulta, meta, paciente)" >
@@ -313,8 +313,8 @@ export default {
               model: ''
             },
             frequencia: {
-              type: 'textbox',
-              label: 'Frequência (Dia)',
+              type: 'numeric',
+              label: 'Frequência',
               model: ''
             },
             posologia: {
@@ -327,25 +327,36 @@ export default {
             'Cancel',
             {
               label: 'Ok',
-              handler: (data) => {
-                Toast.create('Medicamento Cadastrado')
-                axios({
-					        method: 'post',
-					        url: 'http://posmed.sytes.net:8081/consulta',
-					        params: {
-					          _id: consulta._id,
-					          molecule: 'consulta',
-					          type: 'findMedicamentoAndUpdate',
-					          medicamento: data
-					        }
-					      }).then(response => {
-                  paciente.consultas.forEach( v => {
-                    v.medicamentos.push(data)
+              handler: (data) => { 
+                if  (JSON.stringify(data.nome) || JSON.stringify(data.posologia) || JSON.stringify(data.frequencia))
+                  {
+                  axios({
+                    method: 'post',
+                    url: 'http://posmed.sytes.net:8081/consulta',
+                    params: {
+                      _id: consulta._id,
+                      molecule: 'consulta',
+                      type: 'findMedicamentoAndUpdate',
+                      medicamento: data
+                    }
+                  }).then(response => {
+                    paciente.consultas.forEach( v => {
+                      v.medicamentos.push(data)
+                      Toast.create('Medicamento Cadastrado')
+                    })
+                  }).catch(error => {
+                    console.log(error)
+                    Toast.create('Erro ao cadastrar o medicamento!')
                   })
-					      }).catch(error => {
-					        console.log(error)
-					      })
-              this.$socket.emit('listenForMedicine', data)
+                this.$socket.emit('listenForMedicine', data)
+                }
+                else
+                {
+                  Dialog.create({
+                    title: 'Atenção!',
+                    message: 'Todos os campos são obrigatórios!'
+                  })
+                }
               }
             }
           ]
@@ -364,13 +375,13 @@ export default {
               model: ''
             },
             frequencia: {
-              type: 'textbox',
-              label: 'Frequencia (Dias)',
+              type: 'numeric',
+              label: 'Frequencia',
               model: ''
             },
-            prazo: {
-              type: 'textbox',
-              label: 'Prazo',
+            periodo: {
+              type: 'numeric',
+              label: 'Periodo',
               model: ''
             }
           },
@@ -379,24 +390,34 @@ export default {
             {
               label: 'Ok',
               handler: (data) => {
-                Toast.create("Metas Cadastrado")
-								axios({
-					        method: 'post',
-					        url: 'http://posmed.sytes.net:8081/consulta',
-					        params: {
-					          _id: consulta._id, // consulta._id,
-					          molecule: 'consulta',
-					          type: 'findMetaAndUpdate',
-					          metas: data
-					        }
-					      }).then(response => {
-                  paciente.consultas.forEach( v => {
-                    v.metas.push(data)
+                if (JSON.stringify(data.descricao) || JSON.stringify(data.frequencia) || JSON.stringify(data.periodo) )
+                {
+                  axios({
+                    method: 'post',
+                    url: 'http://posmed.sytes.net:8081/consulta',
+                    params: {
+                      _id: consulta._id,
+                      molecule: 'consulta',
+                      type: 'findMetaAndUpdate',
+                      metas: data
+                    }
+                  }).then(response => {
+                    paciente.consultas.forEach( v => {
+                      v.metas.push(data)
+                      Toast.create("Metas Cadastrado")
+                    })
+                    this.$socket.emit('listenForMetas', data)
+                  }).catch(error => {
+                    console.log(error)
+                    Toast.create("Erro ao cadastrar metas do paciente")
                   })
-                  this.$socket.emit('listenForMetas', data)
-					      }).catch(error => {
-					        console.log(error)
-					      })
+                }
+                else{
+                  Dialog.create({
+                    title: 'Atenção!',
+                    message: 'Todos os campos são obrigatórios!'
+                  })
+                }
               }
             }
           ]
@@ -404,40 +425,74 @@ export default {
       ]
     },
 		delMeta (index, consulta, meta, paciente) {
-      console.log(index)
-			axios({
-        method: 'post',
-        url: 'http://posmed.sytes.net:8081/consulta',
-        params: {
-          id: consulta._id,
-          molecule: 'consulta',
-          type: 'findMetaAndDelete',
-          deleteUid: meta._id
-        }
-      }).then(response => {
-        paciente.consultas.forEach( v => {
-          v.metas.splice(index, 1)
-        })
-      }).catch(error => {
-        console.log(error)
+      Dialog.create({
+        title: 'Atenção',
+        message: 'Deseja cancelar a Meta cadastrada?',
+        buttons: [
+          {
+            label: 'Não',
+            handler () {
+            }
+          },
+          {
+            label: 'Sim',
+            handler () {
+              console.log(index)
+              axios({
+                method: 'post',
+                url: 'http://posmed.sytes.net:8081/consulta',
+                params: {
+                  id: consulta._id,
+                  molecule: 'consulta',
+                  type: 'findMetaAndDelete',
+                  deleteUid: meta._id
+                }
+              }).then(response => {
+                paciente.consultas.forEach( v => {
+                  v.metas.splice(index, 1)
+                })
+                Toast.create('Meta excluída!')
+              }).catch(error => {
+                Toast.create('Erro ao cancelar a meta!')
+              })
+            }
+          }
+        ]
       })
-		},
+    },
     delMedi (index, consulta, medicamento, paciente) {
-      axios({
-        method: 'post',
-        url: 'http://posmed.sytes.net:8081/consulta',
-        params: {
-          id: consulta._id,
-          molecule: 'consulta',
-          type: 'findMedicamentoDelete',
-          deleteUid: medicamento._id
-        }
-      }).then(response => {
-        paciente.consultas.forEach( v => {
-          v.medicamentos.splice(index, 1)
-        })
-      }).catch(error => {
-        console.log(error)
+      Dialog.create({
+        title: 'Atenção',
+        message: 'Deseja excluir o medicamento cadastrado?',
+        buttons: [
+          {
+            label: 'Não',
+            handler () {
+            }
+          },
+          {
+            label: 'Sim',
+            handler () {
+              axios({
+                method: 'post',
+                url: 'http://posmed.sytes.net:8081/consulta',
+                params: {
+                  id: consulta._id,
+                  molecule: 'consulta',
+                  type: 'findMedicamentoDelete',
+                  deleteUid: medicamento._id
+                }
+                }).then(response => {
+                  paciente.consultas.forEach( v => {
+                    v.medicamentos.splice(index, 1)
+                  })
+                  Toast.create('Medicamento excluído!')
+              }).catch(error => {
+                Toast.create('Erro ao excluír o medicamento!')
+              })
+            }
+          }
+        ]
       })
     },
     getPaciente (user) {
