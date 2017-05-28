@@ -31,11 +31,11 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <universal-links>
-    <host name="abc123.app.goo.gl" scheme="https" />
-    <host name="vuejs-firebase-dc140.firebaseapp.com" scheme="https">
-        <path url="/__/auth/callback"/>
-    </host>
-</universal-links>
+        <host name="abc123.app.goo.gl" scheme="https" />
+        <host name="vuejs-firebase-dc140.firebaseapp.com" scheme="https">
+            <path url="/__/auth/callback" />
+        </host>
+    </universal-links>
     <preference name="OverrideUserAgent" value="Mozilla/5.0 Google" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="ShowSplashScreenSpinner" value="false" />
@@ -43,5 +43,5 @@
     <plugin name="cordova-plugin-buildinfo" spec="~1.1.0" />
     <plugin name="cordova-universal-links-plugin" spec="~1.2.1" />
     <plugin name="cordova-plugin-browsertab" spec="~0.2.0" />
-
+    <plugin name="onesignal-cordova-plugin" spec="~2.1.1" />
 </widget>

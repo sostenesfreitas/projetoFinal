@@ -52,6 +52,15 @@ export default {
   created () {
     this.loginCache()
   },
+  mounted () {
+    var notificationOpenedCallback = function (jsonData) {
+      console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData))
+    }
+    window.plugins.OneSignal
+      .startInit('b3e080fc-ff5d-4efd-9444-4260e6f20d3e')
+      .handleNotificationOpened(notificationOpenedCallback)
+      .endInit()
+  },
   methods: {
     /* eslint-disable */
     login () {
