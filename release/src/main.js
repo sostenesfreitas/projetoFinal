@@ -11,7 +11,15 @@ import Quasar from 'quasar'
 import router from './router'
 import VueSocketio from 'vue-socket.io'
 Vue.use(VueSocketio, 'http://posmed.sytes.net:8082')
+import * as VueGoogleMaps from 'vue2-google-maps'
 
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyDEhrvNA_FNnIh0CBcSFZhRyLKtDr9Qt8I',
+    v: '1.0'
+    // libraries: 'places', //// If you need to use place input
+  }
+})
 Vue.use(Quasar) // Install Quasar Framework
 
 Quasar.start(() => {

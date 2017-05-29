@@ -5,7 +5,7 @@
         <h6>Mais ou menos.</h6>
       </div>
     <h6>{{pergunta}}</h6>
-    <router-link to='/sintoma'><button type="button" name="button">Sim</button></router-link>
+    <router-link to='/bot'><button type="button" name="button">Sim</button></router-link>
     <button type="button" name="button">Não</button>
     </div>
   </div>

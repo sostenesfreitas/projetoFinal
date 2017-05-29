@@ -21,7 +21,8 @@
     "vue": "^2.3.0",
     "vue-router": "^2.0.0",
     "vue-socket.io": "^2.1.1-a",
-    "vue-timeago": "^3.3.1"
+    "vue-timeago": "^3.3.1",
+    "vue2-google-maps": "^0.7.5"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",

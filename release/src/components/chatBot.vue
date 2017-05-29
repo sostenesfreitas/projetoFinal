@@ -1,6 +1,7 @@
 <template>
   <q-layout>
     <div class="layou-view">
+      <button type="button" class="push" style="float:right">Medico</button>
       <iframe src="http://posmed.sytes.net:8083">
 
       </iframe>
