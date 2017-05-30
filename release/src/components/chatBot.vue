@@ -1,9 +1,10 @@
 <template>
   <q-layout>
     <div class="layou-view">
-      <button type="button" class="push" style="float:right">Medico</button>
+      <router-link to="/chat" style="float: right">
+        <i>more_vert</i>
+      </router-link>
       <iframe src="http://posmed.sytes.net:8083">
-
       </iframe>
     </div>
   </q-layout>
@@ -13,5 +14,5 @@
     width 100%
   iframe
     width 100%
-    height 100%
+    height 95%
 </style>

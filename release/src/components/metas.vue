@@ -4,7 +4,10 @@
       <div class="c card column" v-for="medicamento in medicamentos">
         <div class="card-title row justify-between" style="background-color: #e4e4e4">
           <h6>Medicamento</h6>
-          <button type="button" class="bg-positive push text-white" @click="feito(medicamento)">Feito</button>
+          <div class="row justify-right">
+            <router-link to="/map" style="padding: 5px"><i>my_location</i></router-link>
+            <button type="button" class="bg-positive push text-white" @click="feito(medicamento)">Feito</button>
+          </div>
         </div>
         <div class="card-content column" >
           <p>Nome: {{medicamento.nome}}</p>
@@ -29,7 +32,7 @@
 </template>
 <script>
 import axios from 'axios'
-import { LocalStorage } from 'quasar'
+import { LocalStorage, Toast } from 'quasar'
 var moment = require('moment')
 export default {
   data () {
@@ -51,40 +54,51 @@ export default {
   methods: {
     feito (medicamento) {
       moment.locale('pt-br')
-      medicamento.created = moment().format('LLL')
       var idb = LocalStorage.get.item('idB')
-      medicamento.id_paciente = idb
-      this.$socket.emit('Medicamento', medicamento)
+      var data = {
+        id_paciente: idb,
+        nome: medicamento.nome,
+        frequencia: medicamento.frequencia,
+        periodo: medicamento.periodo,
+        posologia: medicamento.posologia,
+        created: moment().format('LLL')
+      }
+      this.$socket.emit('Medicamento', data)
       axios({
         method: 'post',
         url: 'http://posmed.sytes.net:8081/indicadorMedicamento',
         params: {
           molecule: 'indicadorMedicamento',
           type: 'create',
-          obj: medicamento
+          obj: data
         }
       }).then(response => {
-
+        Toast.create('Indicador enviado')
       }).catch(error => {
         console.log(error)
       })
     },
     done (meta) {
       moment.locale('pt-br')
-      meta.created = moment().format('LLL')
       var idb = LocalStorage.get.item('idB')
-      meta.id_paciente = idb
-      this.$socket.emit('Meta', meta)
+      var data = {
+        descricao: meta.descricao,
+        frequencia: meta.frequencia,
+        prazo: meta.prazo,
+        created: moment().format('LLL'),
+        id_paciente: idb
+      }
+      this.$socket.emit('Meta', data)
       axios({
         method: 'post',
         url: 'http://posmed.sytes.net:8081/indicadormeta',
         params: {
           molecule: 'indicadormeta',
           type: 'create',
-          obj: meta
+          obj: data
         }
       }).then(response => {
-
+        Toast.create('Meta concluidas')
       }).catch(error => {
         console.log(error)
       })

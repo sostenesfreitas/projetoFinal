@@ -77,7 +77,7 @@ export default {
       let hora = new Date().getTime()
       var data = {
         created: hora,
-        uid: user.uid,
+        uid: user.idB,
         msg: message,
         user: user.avatar,
         chat: md5(user.idB + '15580')

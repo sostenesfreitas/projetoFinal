@@ -49,7 +49,7 @@
       <br>
     </div>
 		<!-- Metas, Medicamentos -->
-    <div class="card" style="width: 150%; padding-right: 10px; padding-left: 10px" v-show="paciente">
+    <div class="card layout-view" style="width: 150%; padding-right: 10px; padding-left: 10px" v-show="paciente">
       <div class="card">
         <div class="item two-lines">
           <img class="item-primary" src="http://www.gellog.com.br/assets/imagens/avatar.png">
@@ -115,6 +115,18 @@
 				<!-- Indicadores -->
         <q-collapsible icon="done_all" label="Indicadores">
           <div class="list">
+            <div class="item two-lines" v-for="e in estado">
+              <div class="item-primary  text-white"
+              :style="e.estado === 'Mal' ? 'background-color: #A569BD' : 'background-color: #808B96' && e.estado === 'Bem' ? 'background-color: #21BA45' : 'background-color: #808B96'">
+                <i class="material-icons">face</i>
+              </div>
+              <div class="item-content has-secondary">
+                <div>{{e.estado}}</div>
+                <div>{{e.created}}</div>
+              </div>
+              <i class="item-secondary">event_available</i>
+            </div>
+            <hr class="inset">
             <div class="item two-lines" v-for="meta in metas">
               <div class="item-primary bg-green-6 text-white">
                 <i class="material-icons">directions_run</i>
@@ -164,9 +176,7 @@
                 <div class="chat-user">
                   <img :src="m.user">
                 </div>
-                <div class="chat-date">
-                  <timeago :auto-update="autoUpdate" :max-time="86400 * 365" :locale="en-US" class="timeago" :since="m.created - 60000"></timeago>
-                </div>
+
                 <div class="chat-message">
                   <p>
                     {{m.msg}}
@@ -177,9 +187,7 @@
                 <div class="chat-user">
                   <img :src="m.user">
                 </div>
-                <div class="chat-date">
-                  <timeago :auto-update="autoUpdate" :max-time="86400 * 365" :locale="en-US" class="timeago" :since="m.created - 60000"></timeago>
-                </div>
+
                 <div class="chat-message">
                   <p>
                     {{m.msg}}
@@ -226,6 +234,7 @@ export default {
       user,
       message: null,
       messages: [],
+      estado: [],
       indicadores: [],
       metas: [],
       columns: {
@@ -238,7 +247,6 @@ export default {
   },
   created () {
     moment.locale('pt-br')
-    // this.getMedico()
     this.loginCache()
     this.$options.sockets.listenForMessage = (message) => {
       this.messages.push(message)
@@ -258,6 +266,54 @@ export default {
     }
   },
   methods: {
+    getFeedback () {
+      axios({
+        method: 'post',
+        url: 'http://posmed.sytes.net:8081/feedback',
+        params: {
+          molecule: 'feedback',
+          type: 'findIndicadorMeta',
+          id: this.user._id
+        }
+      }).then(response => {
+        this.estado = response.data
+        console.log(response.data)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getMedicamento () {
+      axios({
+        method: 'post',
+        url: 'http://posmed.sytes.net:8081/indicadorMedicamento',
+        params: {
+          molecule: 'indicadorMedicamento',
+          type: 'findIndicadorMeta',
+          id: this.user._id
+        }
+      }).then(response => {
+        this.indicadores = response.data
+        console.log(response.data)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getMetas () {
+      axios({
+        method: 'post',
+        url: 'http://posmed.sytes.net:8081/indicadormeta',
+        params: {
+          molecule: 'indicadormeta',
+          type: 'findIndicadorMeta',
+          id: this.user._id
+        }
+      }).then(response => {
+        this.metas = response.data
+        console.log(response.data)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     login (crm, password)  {
       axios({
         method: 'post',
@@ -327,7 +383,7 @@ export default {
             'Cancel',
             {
               label: 'Ok',
-              handler: (data) => { 
+              handler: (data) => {
                 if  (JSON.stringify(data.nome) || JSON.stringify(data.posologia) || JSON.stringify(data.frequencia))
                   {
                   axios({
@@ -498,6 +554,9 @@ export default {
     getPaciente (user) {
       this.user = user
       this.getMsg()
+      this.getMetas()
+      this.getMedicamento()
+      this.getFeedback()
       axios({
         method: 'post',
         url: 'http://posmed.sytes.net:8081/paciente',

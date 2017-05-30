@@ -17,14 +17,49 @@
         </router-link>
       </div>
     </div>
+    <div class="card c text-center" v-if="option">
+      <div class=" text-center">
+        <h6>Confirmar Estado.</h6>
+      </div>
+    <button type="button" class="push bg-positive full-width text-white" @click="send()">Ok</button>
+    </div>
   </div>
 </template>
 <script>
+  import axios from 'axios'
+  import { LocalStorage } from 'quasar'
+  var moment = require('moment')
   export default {
     name: 'Explicacao',
     data () {
       return {
+        option: true,
         pergunta: 'Qual o problema ?'
+      }
+    },
+    methods: {
+      send () {
+        moment.locale('pt-br')
+        var idb = LocalStorage.get.item('idB')
+        var data = {
+          estado: 'Mal',
+          id_paciente: idb,
+          created: moment().format('LLL')
+        }
+        axios({
+          method: 'post',
+          url: 'http://posmed.sytes.net:8081/feedback',
+          params: {
+            molecule: 'feedback',
+            type: 'create',
+            obj: data
+          }
+        }).then(response => {
+          this.option = false
+          console.log(response)
+        }).catch(error => {
+          console.log(error)
+        })
       }
     }
   }
