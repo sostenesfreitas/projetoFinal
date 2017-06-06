@@ -3,11 +3,11 @@
     <div class="layout-view container">
       <div class="c card column" v-for="medicamento in medicamentos">
         <div class="card-title row justify-between" style="background-color: #e4e4e4">
-          <h6>Medicamento</h6>
-          <div class="row justify-right">
-            <router-link to="/map" style="padding: 5px"><i>my_location</i></router-link>
-            <button type="button" class="bg-positive push text-white" @click="feito(medicamento)">Feito</button>
+          <div class="row justify-left">
+            <router-link to="/map" style="padding: 5px;"><i>location_on</i></router-link>
+            <h6>Medicamento</h6>
           </div>
+          <button type="button" class="bg-positive push text-white" @click="feito(medicamento)">Feito</button>
         </div>
         <div class="card-content column" >
           <p>Nome: {{medicamento.nome}}</p>
@@ -18,7 +18,7 @@
 
       <div class="c card column" v-for="meta in metas">
         <div class="card-title row justify-between" style="background-color: #e4e4e4">
-          <h6>Metas</h6>
+          <h6 style="padding-left: 5px">Metas</h6>
           <button type="button" class="bg-positive push text-white" @click="done(meta)">Feito</button>
         </div>
         <div class="card-content column">

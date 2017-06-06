@@ -44,4 +44,5 @@
     <plugin name="cordova-universal-links-plugin" spec="~1.2.1" />
     <plugin name="cordova-plugin-browsertab" spec="~0.2.0" />
     <plugin name="onesignal-cordova-plugin" spec="~2.1.1" />
+    <plugin name="cordova-plugin-geolocation" spec="~2.4.3" />
 </widget>

@@ -1,30 +1,57 @@
 <template>
   <gmap-map
   :center= "center"
-  :zoom="17"
+  :zoom="16"
   map-type-id="terrain"
   style="width: 100%; height: 600px"
 >
     <gmap-marker
-      v-for="m in markers"
-      :position="m.position"
+      v-for="l in location"
+      :position="l"
       :clickable="true"
-      :draggable="true"
-      @click="center=m.position"
+      :draggable="false"
+      @click="center=l"
     ></gmap-marker>
   </gmap-map>
 </template>
 
 <script>
+  import axios from 'axios'
   export default {
     data () {
       return {
-        center: {lat: -8.1544179, lng: -34.9201405},
-        markers: [{
-          position: {lat: -8.1524001, lng: -34.920339}
-        }, {
-          position: {lat: -8.1578802, lng: -34.9147278}
-        }]
+        center: {},
+        location: []
+      }
+    },
+    created () {
+      this.getPosition()
+    },
+    methods: {
+      getPosition () {
+        navigator.geolocation.getCurrentPosition(position => {
+          this.center = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          }
+          this.getMarkers(position.coords.latitude, position.coords.longitude)
+        })
+      },
+      getMarkers (lat, lng) {
+        axios({
+          method: 'get',
+          url: 'http://posmed.sytes.net:8081/maps',
+          params: {
+            lat: lat,
+            lng: lng
+          }
+        }).then(response => {
+          response.data.results.forEach(value => {
+            this.location.push(value.geometry.location)
+          })
+        }).catch(error => {
+          console.log(error)
+        })
       }
     }
   }
